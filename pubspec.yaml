@@ -22,10 +22,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  assets:
-    - assets/image/
-    - assets/icons/
-    - assets/fonts/
+  #assets:
+   # - assets/image/
+    #- assets/icons/
+    #- assets/fonts/
 
   # fonts:
   #   - family: Schyler
