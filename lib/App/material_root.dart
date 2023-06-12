@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:streetanimals/main.dart';
-
-import '../Page/home_page.dart';
+import 'package:streetanimals/pages/home/home_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -14,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const HomePage(),
     );
   }
 }
