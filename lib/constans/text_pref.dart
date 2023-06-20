@@ -1,9 +1,6 @@
-import 'package:flutter/widgets.dart';
-
-class TextMod extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
+class FontConstants {
+  static const montserratBlack = 'Montserrat-Black';
+  static const montserratBold = 'Montserrat-Bold';
+  static const montserratLight = 'Montserrat-Light';
+  static const montserratRegular = 'Montserrat-Regular';
 }
