@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class textMod extends StatelessWidget {
   final String title;
-  const textMod(this.title, {Key? key, }) : super(key: key);
+
+  const textMod(this.title, {Key? key,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +16,7 @@ class textMod extends StatelessWidget {
       ),
     );
   }
+}
 class FontConstants {
   static const montserratBlack = 'Montserrat-Black';
   static const montserratBold = 'Montserrat-Bold';

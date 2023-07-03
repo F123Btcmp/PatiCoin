@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "876654566854",
+    "project_id": "paticoin",
+    "storage_bucket": "paticoin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:876654566854:android:bcb85351f3a74b252fa6c7",
+        "android_client_info": {
+          "package_name": "com.f123.paticoin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "876654566854-622c37jqh8gaq83tlbl0evkl5cecvvui.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.f123.paticoin",
+            "certificate_hash": "174a90de0477ac1fe4139333beeb7b7f3898f996"
+          }
+        },
+        {
+          "client_id": "876654566854-f77r95l79bgkuoqsbb9ek0hv95usrfh9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBcwE2hJnE_EcWVPVBUKoftMKFfm3sqVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "876654566854-f77r95l79bgkuoqsbb9ek0hv95usrfh9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

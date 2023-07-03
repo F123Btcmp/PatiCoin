@@ -3,10 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/constans/text_pref.dart';
 import 'package:streetanimals/riverpod_management.dart';
-
 import '../classes/app_bar_profile.dart';
-
-
 
 class profilePage extends ConsumerStatefulWidget {
   const profilePage({Key? key}) : super(key: key);
@@ -29,7 +26,6 @@ class _profilePage extends ConsumerState <profilePage> {
   @override
   Widget build(BuildContext context) {
     isLike = false;
-    var renk = CustomColors();
     var size = MediaQuery.of(context).size;
     double hsize = size.height * 0.2 ;
     double wsize = size.width * 0.35 ;
@@ -176,7 +172,6 @@ class _profilePage extends ConsumerState <profilePage> {
   }
 
   Widget profileBox(Size size, String title) {
-    var renk = CustomColors();
     var Cheight = size.width * 0.26;
     var Cwidth = size.width * 0.25;
     IconData ?myIcon ;
@@ -197,7 +192,7 @@ class _profilePage extends ConsumerState <profilePage> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: renk.appColor,
+            color: ColorConstants.pink2,
             boxShadow: const [
               BoxShadow(
                   color: Colors.black38,
@@ -355,7 +350,6 @@ class _profilePage extends ConsumerState <profilePage> {
     );
   }
   Widget firstPage(BuildContext context, Size size) {
-    var renk = CustomColors();
     return GridView.count(
         padding: EdgeInsets.symmetric(vertical:  5, horizontal: 25),
         crossAxisCount: 2,
@@ -407,7 +401,7 @@ class _profilePage extends ConsumerState <profilePage> {
                                 isLike!
                                     ?Icons.favorite
                                     :Icons.favorite_border,
-                                color: renk.appColor,
+                                color: ColorConstants.pink,
                                 size: 17,
                               ),
                             ),
@@ -420,7 +414,7 @@ class _profilePage extends ConsumerState <profilePage> {
                               },
                               child: Icon(
                                 Icons.comment_rounded,
-                                color: renk.appColor,
+                                color: ColorConstants.pink,
                                 size: 17,
                               ),
                             ),
@@ -445,7 +439,6 @@ class _profilePage extends ConsumerState <profilePage> {
     );
   }
   Widget secondPage(BuildContext context, Size size) {
-    var renk = CustomColors();
     return SizedBox(
       width: size.width,
       child: ListView.builder(
@@ -459,7 +452,7 @@ class _profilePage extends ConsumerState <profilePage> {
                 height: size.height * 0.2,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: renk.advertcolor,
+                  color: ColorConstants.lightpink,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -510,11 +503,11 @@ class _profilePage extends ConsumerState <profilePage> {
                             ),
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: const [
                               Icon(
                                   Icons.remove_red_eye,
-                                size: 15,
+                                size: 17,
                               ),
                               Text("48 Görünülenme")
                             ],
@@ -537,7 +530,6 @@ class _profilePage extends ConsumerState <profilePage> {
 }
 
 class shadowProfileBox extends CustomPainter {
-  var renk = CustomColors();
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -545,7 +537,7 @@ class shadowProfileBox extends CustomPainter {
     var height = size.height * 0.85 ;
     var width = size.width ;
     Paint paint = Paint()
-      ..color = Colors.black38
+      ..color = Colors.white38
       ..isAntiAlias = true
       ..maskFilter = MaskFilter.blur(BlurStyle.inner, 5)
       ..style = PaintingStyle.fill ;
