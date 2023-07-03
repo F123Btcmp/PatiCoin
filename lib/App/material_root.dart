@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:streetanimals/App/base_PatiCoin.dart';
+import 'package:streetanimals/pages/home/home_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const base_PatiCoin(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

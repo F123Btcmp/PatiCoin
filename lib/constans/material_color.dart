@@ -1,6 +1,21 @@
 import 'package:flutter/material.dart';
 
-class CustomColors {
-  Color appColor = Color(0xff8C5073);
-  Color advertcolor = Color(0xFFCBB7C3);
+class ColorConstants {
+  static const purple = Color(0xff8359E3);
+
+  static const pink = Color(0xffFF76C5);
+
+  static const lila = Color(0xff9EE1EC);
+
+  static const white = Color(0xffFFFFFF);
+
+  static const black = Color(0xff010101);
+
+  static const fillColorText = Color(0xffF6F6F7);
+
+  static const LinearGradient bgGradient = LinearGradient(
+    colors: [purple, pink],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }
