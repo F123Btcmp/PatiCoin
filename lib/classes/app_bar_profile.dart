@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:streetanimals/riverpod_management.dart';
 
-class appBarCustom extends StatelessWidget implements PreferredSizeWidget {
+class appBarCustom extends ConsumerWidget implements PreferredSizeWidget {
   final String title;
   const appBarCustom({Key? key, required this.title}) : super(key: key);
   @override
@@ -8,13 +10,11 @@ class appBarCustom extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(60);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     var size = MediaQuery.of(context).size;
+    var navbarRiv = ref.read(navbarRiverpod);
     return Stack(
       children: [
-        Container(
-          color: Colors.white.withOpacity(0.1), // Saydamlığı ayarlayın
-        ),
         CustomPaint(
           size: size,
           painter: drawAppBar(),
@@ -78,6 +78,7 @@ class appBarCustom extends StatelessWidget implements PreferredSizeWidget {
           child:GestureDetector(
             onTap: () {
               print(size.width);
+              navbarRiv.setCurrentindex(0);
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
