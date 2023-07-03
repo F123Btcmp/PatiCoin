@@ -12,10 +12,12 @@ class UserTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _textcontroller = TextEditingController();
     return SizedBox(
       width: 330,
       height: 50,
       child: TextFormField(
+        controller: _textcontroller,
         textAlign: TextAlign.left,
         style: const TextStyle(
           fontFamily: FontConstants.montserratRegular,
