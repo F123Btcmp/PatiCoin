@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:streetanimals/pages/home/home_page.dart';
-import 'package:streetanimals/pages/login_and_register/login_view.dart';
-import 'package:streetanimals/pages/login_and_register/register_view.dart';
+
+import 'base_PatiCoin.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -9,9 +8,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const base_PatiCoin(),
       debugShowCheckedModeBanner: false,
-      home: LoginView(),
     );
   }
 }

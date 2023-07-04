@@ -11,10 +11,14 @@ dependencies:
     sdk: flutter
   flutter_riverpod: ^2.3.6
   rive: ^0.11.3
+  google_sign_in: ^6.1.4
+  firebase_auth: ^4.6.3
+  firebase_core: ^2.14.0
 
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
+  change_app_package_name: ^1.1.0
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0

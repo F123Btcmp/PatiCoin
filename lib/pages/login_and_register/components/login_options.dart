@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:streetanimals/constans/material_color.dart';
 
 class LoginOptions extends StatelessWidget {

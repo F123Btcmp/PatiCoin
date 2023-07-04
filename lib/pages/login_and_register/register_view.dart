@@ -8,6 +8,8 @@ import 'package:streetanimals/pages/login_and_register/components/cat.dart';
 import 'package:streetanimals/pages/login_and_register/components/password_textformfield.dart';
 import 'package:streetanimals/pages/login_and_register/components/user_textFormField.dart';
 
+import '../../utils/email_sign.dart';
+
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
 
@@ -110,7 +112,9 @@ class RegisterForm extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 20),
                   child: CustomButton(
                     buttonText: "Kayıt Ol",
-                    onPressed: () {},
+                    onPressed: () {
+                      registerWithEmailAndPassword();
+                    },
                   ),
                 )
               ],

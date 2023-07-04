@@ -5,6 +5,10 @@ class ColorConstants {
 
   static const pink = Color(0xffFF76C5);
 
+  static const pink2 = Color(0xffCC589B);
+
+  static const lightpink = Color(0xFFCBB7C3);
+
   static const lila = Color(0xff9EE1EC);
 
   static const white = Color(0xffFFFFFF);
