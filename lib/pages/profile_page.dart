@@ -60,8 +60,8 @@ class _profilePage extends ConsumerState <profilePage> {
                           alignment: Alignment.center,
                           children: [
                             SizedBox(
-                              height: size.width * 0.215,
-                              width:  size.width * 0.215,
+                              height: size.width * 0.15,
+                              width:  size.width * 0.15,
                               child: DecoratedBox(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
@@ -70,8 +70,8 @@ class _profilePage extends ConsumerState <profilePage> {
                               ),
                             ),
                             SizedBox(
-                              height:size.width * 0.2,
-                              width: size.width * 0.2,
+                              height:size.width * 0.1,
+                              width: size.width * 0.1,
                               child: Image.network("https://cdn-icons-png.flaticon.com/512/3135/3135715.png")//Hero
                             ),
                             Positioned(

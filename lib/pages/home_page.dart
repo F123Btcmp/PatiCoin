@@ -7,6 +7,7 @@ import 'package:streetanimals/riverpod_management.dart';
 import 'package:streetanimals/utils/db_firebase.dart';
 
 import '../models/user_info.dart';
+import 'cam_page.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -44,16 +45,9 @@ class _MyHomePageState extends ConsumerState <MyHomePage> {
         ),
         ElevatedButton(
             onPressed: () {
-              Userinfo user = Userinfo(name: "Abuziddin", surname: "Kemal", email: "abkemal@hotmail.com", password: "admin",coin: 0);
-              Postinfo post = Postinfo(user_id: user.id, Province: "istanbul", district: "Başakşehir", image_list: ["afafsafsafas","asfasasfasf"]);
-              dbFirebase().createUser(user);
+              navbarRiv.setCurrentindex(2);
             },
-            child: Text("Kayıt ekle")
-        ),
-        ElevatedButton(
-            onPressed: () {
-            },
-            child: Text("Kayıt sil")
+            child: Text("Cam Page")
         ),
       ],
     );
