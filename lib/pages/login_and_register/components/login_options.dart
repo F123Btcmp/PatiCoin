@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:streetanimals/constans/material_color.dart';
+import 'package:streetanimals/models/user_info.dart';
+import 'package:streetanimals/utils/db_firebase.dart';
 
 class LoginOptions extends StatelessWidget {
   const LoginOptions({super.key});
@@ -21,7 +23,11 @@ class LoginOptions extends StatelessWidget {
         child: Row(
           children: [
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                print("object");
+                //dbFirebase().readUsers();
+                dbFirebase().foundUserid("ibrahimethem0@hotmail.com");
+              },
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
