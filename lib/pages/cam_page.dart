@@ -33,11 +33,11 @@ class _camPage extends ConsumerState<camPage> {
       }
     });
   }
+  TextEditingController _textcontroller = TextEditingController();
+  PageController _pagecontroller = PageController();
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _textcontroller = TextEditingController();
-    PageController _pagecontroller = PageController();
     var navbarRiv = ref.read(navbarRiverpod);
     var size = MediaQuery.of(context).size;
     return SafeArea(
@@ -272,8 +272,8 @@ class _camPage extends ConsumerState<camPage> {
                         ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
+                    GestureDetector (
+                      onTap: () async {
                         if (imageFile1 != null){
                           images.add(imageFile1!);
                         }if(imageFile2 != null){
@@ -281,8 +281,8 @@ class _camPage extends ConsumerState<camPage> {
                         }
                         print(images.length);
                         print(images);
+                        await sharePost().uploadFileToStorage(images, _textcontroller).then((value) => Navigator.of(context).pop());
                         images.clear();
-                        sharePost().uploadFileToStorage(images, _textcontroller);
                       },
                       child: Container( ///buton
                         height: size.width * 0.15,
@@ -313,7 +313,7 @@ class _camPage extends ConsumerState<camPage> {
                     ),
                     GestureDetector(
                         onTap: () {
-                          navbarRiv.setCurrentindex(0);
+                          Navigator.of(context).pop();
                         },
                         child: const Text("Paylaşmadan Devam Etmek istiyorum.")
                     ),

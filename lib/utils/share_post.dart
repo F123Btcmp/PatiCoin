@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/src/widgets/editable_text.dart';
@@ -12,32 +11,40 @@ class sharePost {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<String?> uploadFileToStorage(List posts ,TextEditingController textcontroller) async {
-    File ?imageFile1;
-    File ?imageFile2;
-
-
-
-
-
-    for( int i = 0 ; i < posts.length; i++){
+  Future<void> uploadFileToStorage(List posts ,TextEditingController textcontroller) async {
+    List <String> postImageFileName = [];
+    if (posts.length > 1){
+      File ?imageFile1;
+      File ?imageFile2;
       if (imageFile1 == null){
         String fileName1 = Uuid().v4();
-        Reference storageRef = _storage.ref().child("posts").child("kullanıcı_id").child(fileName1);
-        imageFile1 = posts[i];
+        postImageFileName.add(fileName1);
+        Reference storageRef = _storage.ref().child("posts").child("kullanıcı_id").child("post_ID").child(fileName1);
+        imageFile1 = posts[0];
         await storageRef.putFile(File(imageFile1!.path));
         print("**********************1");
-      }else if(imageFile2 == null){
+      }
+      if(imageFile2 == null){
         String fileName2 = Uuid().v4();
-        Reference storageRef = _storage.ref().child("posts").child("kullanıcı_id").child(fileName2);
-        imageFile2 = posts[i];
+        postImageFileName.add(fileName2);
+        Reference storageRef = _storage.ref().child("posts").child("kullanıcı_id").child("post_ID").child(fileName2);
+        imageFile2 = posts[1];
         await storageRef.putFile(File(imageFile2!.path));
         print("**********************2");
-
       }
-      print("girmiyor");
+    }else if (posts.length == 1){
+      File ?imageFile1;
+
+      if (imageFile1 == null){
+        String fileName1 = Uuid().v4();
+        postImageFileName.add(fileName1);
+        Reference storageRef = _storage.ref().child("posts").child("kullanıcı_id").child("post_ID").child(fileName1);
+        imageFile1 = posts[0];
+        await storageRef.putFile(File(imageFile1!.path));
+        print("**********************1");
+      }
     }
-    //await storageRef.putFile(File(imageFile1!.path));
+    publish(postImageFileName , textcontroller);
   }
 
   Future<void> publish(List images, TextEditingController textcontroller) async {
