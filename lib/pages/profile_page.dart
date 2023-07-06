@@ -70,8 +70,8 @@ class _profilePage extends ConsumerState <profilePage> {
                               ),
                             ),
                             SizedBox(
-                              height:size.width * 0.1,
-                              width: size.width * 0.1,
+                              height:size.width * 0.14,
+                              width: size.width * 0.14,
                               child: Image.network("https://cdn-icons-png.flaticon.com/512/3135/3135715.png")//Hero
                             ),
                             Positioned(

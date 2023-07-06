@@ -16,16 +16,5 @@ class navbarProvider extends ChangeNotifier {
     currentindex = index ;
     notifyListeners();
   }
-  Widget body() {
-    switch (currentindex) {
-      case 0 :
-        return const MyHomePage();
-      case 1:
-        return const profilePage();
-      case 2:
-        return const camPage();
-      default :
-        return const MyHomePage();
-    }
-  }
+
 }

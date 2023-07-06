@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:streetanimals/models/post_info.dart';
+import 'package:streetanimals/pages/cam_page.dart';
 import 'package:streetanimals/pages/login_and_register/login_view.dart';
 import 'package:streetanimals/pages/login_and_register/register_view.dart';
+import 'package:streetanimals/pages/profile_page.dart';
 import 'package:streetanimals/riverpod_management.dart';
-import 'package:streetanimals/utils/db_firebase.dart';
-
-import '../models/user_info.dart';
-import 'cam_page.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -27,7 +24,7 @@ class _MyHomePageState extends ConsumerState <MyHomePage> {
         Text("asfafasfas"),
         ElevatedButton(
             onPressed: () {
-              navbarRiv.setCurrentindex(1);
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => profilePage()));
             },
             child: Text("Profile Page")
         ),
@@ -45,7 +42,7 @@ class _MyHomePageState extends ConsumerState <MyHomePage> {
         ),
         ElevatedButton(
             onPressed: () {
-              navbarRiv.setCurrentindex(2);
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => camPage()));
             },
             child: Text("Cam Page")
         ),
