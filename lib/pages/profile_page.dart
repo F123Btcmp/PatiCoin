@@ -65,26 +65,27 @@ class _profilePage extends ConsumerState<profilePage> {
                                 color: Colors.black,
                               ),
                             ),
-                          ),
-                          SizedBox(
-                              height: size.width * 0.2,
-                              width: size.width * 0.2,
-                              child: Image.network(
-                                  "https://cdn-icons-png.flaticon.com/512/3135/3135715.png") //Hero
-                              ),
-                          Positioned(
-                            bottom: 0.0,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Container(
-                                height: 17,
-                                width: 50,
-                                color: Colors.black,
-                                child: const Center(
-                                  child: Text(
-                                    "Admin",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 11),
+                            SizedBox(
+                              height:size.width * 0.14,
+                              width: size.width * 0.14,
+                              child: Image.network("https://cdn-icons-png.flaticon.com/512/3135/3135715.png")//Hero
+                            ),
+                            Positioned(
+                              bottom: 0.0,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Container(
+                                  height: 17,
+                                  width: 50,
+                                  color: Colors.black,
+                                  child: const Center(
+                                    child: Text(
+                                      "Admin",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:streetanimals/pages/home_page.dart';
 import 'package:streetanimals/riverpod_management.dart';
 
 class base_PatiCoin extends ConsumerStatefulWidget {
@@ -14,7 +15,7 @@ class _base_PatiCoinState extends ConsumerState<base_PatiCoin> {
   Widget build(BuildContext context) {
     var watch = ref.watch(navbarRiverpod);
     return Scaffold(
-      body: watch.body(),
-    );
+      body: MyHomePage(),
+    ) ;
   }
 }
