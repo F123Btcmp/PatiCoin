@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/constans/text_pref.dart';
 import 'package:streetanimals/pages/login_and_register/components/button.dart';
 import 'package:streetanimals/pages/login_and_register/components/cat.dart';
-import 'package:streetanimals/pages/login_and_register/components/password_textformfield.dart';
-import 'package:streetanimals/pages/login_and_register/components/user_textFormField.dart';
-
-import '../../utils/email_sign.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -38,19 +32,30 @@ class _RegisterViewState extends State<RegisterView> {
   }
 }
 
-class RegisterForm extends StatelessWidget {
+class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
 
   @override
+  State<RegisterForm> createState() => _RegisterFormState();
+}
+
+class _RegisterFormState extends State<RegisterForm> {
+  late final TextEditingController _isim = TextEditingController();
+  late final TextEditingController _soyisim = TextEditingController();
+  late final TextEditingController _email = TextEditingController();
+  late final TextEditingController _password = TextEditingController();
+
+  @override
+  void dispose() {
+    _isim.dispose();
+    _soyisim.dispose();
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-
-
-    final TextEditingController textcontrollername = TextEditingController();
-    TextEditingController ?textcontrollersurname = TextEditingController();
-    TextEditingController ?textcontrollerademail = TextEditingController();
-    TextEditingController ?textcontrolleradpassword = TextEditingController();
-
-
     return Align(
       alignment: Alignment.center,
       child: Padding(
@@ -92,38 +97,99 @@ class RegisterForm extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(
-                    left: 10,
-                  ),
-                  child: UserTextFormField(hintTextTitle: "isim")
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(
+                Padding(
+                  padding: const EdgeInsets.only(
                     left: 10,
                     top: 15,
                   ),
-                  child: UserTextFormField(hintTextTitle: "Soyisim"),
+                  child: TextFormField(
+                    controller: _isim,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    decoration: const InputDecoration(hintText: 'İsim'),
+                  ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(
+                Padding(
+                  padding: const EdgeInsets.only(
                     left: 10,
                     top: 15,
                   ),
-                  child: UserTextFormField(hintTextTitle: "E-Posta"),
+                  child: TextFormField(
+                    controller: _soyisim,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    decoration: const InputDecoration(hintText: 'Soyisim'),
+                  ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 15, left: 10),
-                  child: PasswordTextFormField(hintTextTitle: "Şifre"),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10,
+                    top: 15,
+                  ),
+                  child: TextFormField(
+                    controller: _email,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(hintText: 'E-posta'),
+                  ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 15, left: 10),
+                  child: TextFormField(
+                    controller: _password,
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    decoration: const InputDecoration(hintText: 'Şifre'),
+                  ),
+                ),
+                // TextButton(
+                //   onPressed: () async {
+                //     final email = _email.text;
+                //     final password = _password.text;
+                //     try {
+                //       await FirebaseAuth.instance
+                //           .createUserWithEmailAndPassword(
+                //         email: email,
+                //         password: password,
+                //       );
+                //       final user = FirebaseAuth.instance.currentUser;
+                //       user?.sendEmailVerification();
+                //       Navigator.of(context).pushNamed(verifyEmailRoute);
+                //     } on FirebaseAuthException catch (e) {
+                //       if (e.code == 'weak-password') {
+                //         await showErrorDialog(
+                //           context,
+                //           'Şifre güçsüz.',
+                //         );
+                //       } else if (e.code == 'email-already-in-use') {
+                //         await showErrorDialog(
+                //           context,
+                //           'E-mail kullanılıyor. ',
+                //         );
+                //       } else if (e.code == 'invalid-email') {
+                //         await showErrorDialog(
+                //           context,
+                //           'Geçersiz email',
+                //         );
+                //       } else {
+                //         await showErrorDialog(
+                //           context,
+                //           'Error ${e.code}',
+                //         );
+                //       }
+                //     }
+                //   },
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: CustomButton(
                     buttonText: "Kayıt Ol",
                     onPressed: () {
+                      //registerWithEmailAndPassword();
                     },
                   ),
-                )
+                ),
               ],
             ),
           ),
