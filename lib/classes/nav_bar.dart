@@ -21,25 +21,21 @@ class _navBar extends ConsumerState<navBar> {
           backgroundColor: ColorConstants.pink2,
           animationDuration: const Duration(microseconds: 300),
           onTap: (index) {},
-          items: [
-            const Icon(
+          items: const [
+            Icon(
               Icons.home,
-              color: ColorConstants.white,
             ),
-            const Icon(
+            Icon(
               Icons.layers,
-              color: ColorConstants.white,
             ),
-            const Icon(
+            Icon(
               Icons.camera_alt_outlined,
             ),
-            const Icon(
+            Icon(
               Icons.shopping_bag_outlined,
-              color: ColorConstants.white,
             ),
-            const Icon(
+            Icon(
               Icons.person,
-              color: ColorConstants.white,
             ),
           ]),
     );

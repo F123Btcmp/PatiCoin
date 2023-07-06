@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/constans/text_pref.dart';
 import 'package:streetanimals/pages/login_and_register/components/button.dart';
 import 'package:streetanimals/pages/login_and_register/components/cat.dart';
+
+import '../../Riverpod/email_sign_provider.dart';
+import '../../riverpod_management.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -32,14 +36,14 @@ class _RegisterViewState extends State<RegisterView> {
   }
 }
 
-class RegisterForm extends StatefulWidget {
+class RegisterForm extends ConsumerStatefulWidget {
   const RegisterForm({super.key});
 
   @override
-  State<RegisterForm> createState() => _RegisterFormState();
+  ConsumerState<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _RegisterFormState extends State<RegisterForm> {
+class _RegisterFormState extends ConsumerState<RegisterForm> {
   late final TextEditingController _isim = TextEditingController();
   late final TextEditingController _soyisim = TextEditingController();
   late final TextEditingController _email = TextEditingController();
@@ -56,6 +60,7 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
+    var authRiv = ref.read(AuthenticationServiceRiverpod);
     return Align(
       alignment: Alignment.center,
       child: Padding(
@@ -186,7 +191,12 @@ class _RegisterFormState extends State<RegisterForm> {
                   child: CustomButton(
                     buttonText: "Kayıt Ol",
                     onPressed: () {
-                      //registerWithEmailAndPassword();
+                      authRiv.registerWithEmailAndPassword(_isim.text, _soyisim.text, _email.text, _password.text).then(
+                          (value) {
+                            Navigator.of(context).pop();
+                            authRiv.refreshRiv();
+                          },
+                      );
                     },
                   ),
                 ),

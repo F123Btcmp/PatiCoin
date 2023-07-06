@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:streetanimals/constans/material_color.dart';
-import 'package:streetanimals/models/user_info.dart';
-import 'package:streetanimals/utils/db_firebase.dart';
+import 'package:streetanimals/riverpod_management.dart';
 
-class LoginOptions extends StatelessWidget {
+class LoginOptions extends ConsumerWidget {
   const LoginOptions({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var authRiv = ref.read(AuthenticationServiceRiverpod);
     return Theme(
       data: ThemeData(
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -24,9 +25,7 @@ class LoginOptions extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                print("object");
-                //dbFirebase().readUsers();
-                dbFirebase().foundUserid("ibrahimethem0@hotmail.com");
+                authRiv.signInWithGoogle().then((value) => authRiv.refreshRiv());
               },
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(

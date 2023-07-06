@@ -38,7 +38,6 @@ class _camPage extends ConsumerState<camPage> {
 
   @override
   Widget build(BuildContext context) {
-    var navbarRiv = ref.read(navbarRiverpod);
     var size = MediaQuery.of(context).size;
     return SafeArea(
         child: Scaffold(
