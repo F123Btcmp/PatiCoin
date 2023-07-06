@@ -3,7 +3,6 @@ class Userinfo {
   String ?name;
   String ?surname;
   String ?email;
-  String ?password;
   int ?coin;
   int ?donate;
   bool ?isactive;
@@ -21,7 +20,6 @@ class Userinfo {
     required this.name,
     required this.surname,
     required this.email,
-    required this.password,
     this.coin ,
     this.donate,
     this.isactive,
@@ -40,7 +38,6 @@ class Userinfo {
     "name" : name,
     "surname" :surname,
     "email" : email,
-    "password" : password,
     "coin" : coin,
     "picture" : picture,
     "donate" : donate,
@@ -59,7 +56,6 @@ class Userinfo {
       name : json["name"],
       surname : json["surname"],
       email : json["email"],
-      password : json["password"],
       coin : json["coin"],
       picture : json["picture"],
       donate : json["donate"],

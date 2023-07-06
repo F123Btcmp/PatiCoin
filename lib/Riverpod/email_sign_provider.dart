@@ -6,11 +6,23 @@ import 'package:streetanimals/pages/login_and_register/login_view.dart';
 
 class AuthenticationServiceProvider extends ChangeNotifier{
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
-  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
+  Stream<User?> get authStateChanges => firebaseAuth.authStateChanges();
   bool ?isActive ;
-  bool ?refresh ;
+  bool ?refresh ; // sayfayı rebuild yapabilmek için tanımladım. Base_Paticoin de.
+
+  String? getUsereid(){
+    return firebaseAuth.currentUser!.uid;
+  }
+
+  String? getUsername(){
+    return firebaseAuth.currentUser!.displayName;
+  }
+  String? getUseremail(){
+    return firebaseAuth.currentUser!.email;
+  }
+
   Widget body(){
     switch(isActive){
       case false:
@@ -27,7 +39,7 @@ class AuthenticationServiceProvider extends ChangeNotifier{
   }
 
   bool isUserLoggedIn() {
-    final User? user = _firebaseAuth.currentUser;
+    final User? user = firebaseAuth.currentUser;
     return user != null;
   }
 
@@ -43,7 +55,7 @@ class AuthenticationServiceProvider extends ChangeNotifier{
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      final UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+      final UserCredential userCredential = await firebaseAuth.signInWithCredential(credential);
       print("Kullanıcı giriş yaptı ${googleUser.email}");
       setisActive(true);
       return userCredential;
@@ -55,7 +67,7 @@ class AuthenticationServiceProvider extends ChangeNotifier{
 
   Future<void> registerWithEmailAndPassword(String name, String surname, String email, String password) async {
     try {
-      UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+      UserCredential userCredential = await firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -69,7 +81,7 @@ class AuthenticationServiceProvider extends ChangeNotifier{
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     try {
-      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+      UserCredential userCredential = await firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -83,7 +95,7 @@ class AuthenticationServiceProvider extends ChangeNotifier{
 
   Future<void> signOut() async {
     try {
-      await _firebaseAuth.signOut() ;
+      await firebaseAuth.signOut() ;
       await _googleSignIn.signOut();
       setisActive(false);
     }catch (e) {

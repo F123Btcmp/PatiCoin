@@ -6,11 +6,11 @@ import '../models/post_info.dart';
 class dbFirebase {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  void createUser(Userinfo user) async {
-    final docUser = firestore.collection("users").doc();
+  void createUser(Userinfo user, FirebaseAuth firebaseAuth) async {
+    final docUser = firestore.collection("users").doc(firebaseAuth.currentUser!.uid);
     final json = user.toJson();
     await docUser.set(json);
-    updateUser("users", docUser.id, {"id":docUser.id}); // Database rastgele atanan id değerini atıyoruz.
+    //updateUser("users", docUser.id, {"id":docUser.id}); // Database rastgele atanan id değerini atıyoruz.
   }
 
   Future<List<Userinfo>> readUsers() async {
@@ -46,7 +46,7 @@ class dbFirebase {
     );
     return id;
   }
-
+/*
   void syncDbUSer(){ // Kullanıcı google veya email ile oturum açarsa bu fonksiyon sayesinde database ile aktivasyonunu gerçekleştireceğiz.
     User? user = FirebaseAuth.instance.currentUser;
     if(user != null){
@@ -54,7 +54,6 @@ class dbFirebase {
         name: user.displayName,
         surname: "",
         email: user.email,
-        password: "null",
         phone: user.phoneNumber,
         picture: user.photoURL,
         coin: 0,
@@ -71,6 +70,8 @@ class dbFirebase {
       print("Kullanıcı oturum açmamış.");
     }
   }
+
+ */
 
   void createPost(Postinfo post) async {
     final docUser = firestore.collection("posts").doc();

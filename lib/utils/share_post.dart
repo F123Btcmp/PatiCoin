@@ -11,7 +11,7 @@ class sharePost {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> uploadFileToStorage(List posts ,TextEditingController textcontroller) async {
+  Future<void> uploadFileToStorage(List posts ,TextEditingController textcontroller, FirebaseAuth firebaseAuth) async {
     List <String> postImageFileName = [];
     if (posts.length > 1){
       File ?imageFile1;
@@ -44,17 +44,21 @@ class sharePost {
         print("**********************1");
       }
     }
-    publish(postImageFileName , textcontroller);
+    publish(postImageFileName , textcontroller, firebaseAuth);
   }
 
-  Future<void> publish(List images, TextEditingController textcontroller) async {
+  Future<void> publish(List images, TextEditingController textcontroller, FirebaseAuth firebaseAuth) async {
     Postinfo post = Postinfo(
-        text: textcontroller.text,
-        user_id: "SfdsIUqcWTeuzMkGniX2",
-        Province: "İstanbul",
-        district: "Başakşehir",
-        image_list: images,
-    );
+      text: textcontroller.text,
+      user_id: firebaseAuth.currentUser!.uid,
+      Province: "İstanbul",
+      district: "Başakşehir",
+      image_list: images,
+      id: "",
+      like_list: [],
+      comments_list: [],
+      datetime: "", ///yapılacak sunucu saatinen çekeceğim.
+     );
     dbFirebase().createPost(post);
   }
 }

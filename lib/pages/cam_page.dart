@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -39,6 +38,7 @@ class _camPage extends ConsumerState<camPage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    var authRiv = ref.read(AuthenticationServiceRiverpod);
     return SafeArea(
         child: Scaffold(
           backgroundColor: ColorConstants.fillColorText,
@@ -280,7 +280,7 @@ class _camPage extends ConsumerState<camPage> {
                         }
                         print(images.length);
                         print(images);
-                        await sharePost().uploadFileToStorage(images, _textcontroller).then((value) => Navigator.of(context).pop());
+                        await sharePost().uploadFileToStorage(images, _textcontroller, authRiv.firebaseAuth).then((value) => Navigator.of(context).pop());
                         images.clear();
                       },
                       child: Container( ///buton

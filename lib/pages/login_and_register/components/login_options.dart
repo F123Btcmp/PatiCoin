@@ -25,7 +25,9 @@ class LoginOptions extends ConsumerWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                authRiv.signInWithGoogle().then((value) => authRiv.refreshRiv());
+                authRiv.signInWithGoogle().then((value) {
+                  authRiv.refreshRiv();
+                });
               },
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(

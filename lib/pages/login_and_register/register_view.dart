@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/constans/text_pref.dart';
+import 'package:streetanimals/models/user_info.dart';
 import 'package:streetanimals/pages/login_and_register/components/button.dart';
 import 'package:streetanimals/pages/login_and_register/components/cat.dart';
+import 'package:streetanimals/utils/db_firebase.dart';
 
 import '../../Riverpod/email_sign_provider.dart';
 import '../../riverpod_management.dart';
@@ -193,6 +195,24 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                     onPressed: () {
                       authRiv.registerWithEmailAndPassword(_isim.text, _soyisim.text, _email.text, _password.text).then(
                           (value) {
+                            Userinfo user = Userinfo(
+                              name: _isim.text,
+                              surname: _soyisim.text,
+                              email: authRiv.getUseremail(),
+                              rewards_list: [],
+                              picture: "",
+                              phone: "",
+                              donate: 0,
+                              coin: 0,
+                              post_list: [],
+                              follow_list: [],
+                              followers_list: [],
+                              dm_list: [],
+                              busket_list: [],
+                              isactive: false,
+                              id: authRiv.getUsereid(),
+                            );
+                            dbFirebase().createUser(user,authRiv.firebaseAuth);
                             Navigator.of(context).pop();
                             authRiv.refreshRiv();
                           },

@@ -7,8 +7,6 @@ import 'package:streetanimals/pages/login_and_register/components/button.dart';
 import 'package:streetanimals/pages/login_and_register/components/cat.dart';
 import 'package:streetanimals/pages/login_and_register/components/login_options.dart';
 import 'package:streetanimals/pages/login_and_register/components/register_text.dart';
-import 'package:streetanimals/Riverpod/email_sign_provider.dart';
-
 import '../../riverpod_management.dart';
 
 class LoginView extends ConsumerStatefulWidget {
