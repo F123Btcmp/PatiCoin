@@ -56,14 +56,6 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-
-
-    final TextEditingController textcontrollername = TextEditingController();
-    TextEditingController ?textcontrollersurname = TextEditingController();
-    TextEditingController ?textcontrollerademail = TextEditingController();
-    TextEditingController ?textcontrolleradpassword = TextEditingController();
-
-
     return Align(
       alignment: Alignment.center,
       child: Padding(
@@ -115,19 +107,6 @@ class _RegisterFormState extends State<RegisterForm> {
                     enableSuggestions: false,
                     autocorrect: false,
                     decoration: const InputDecoration(hintText: 'İsim'),
-<<<<<<< Updated upstream
-                  ),
-<<<<<<< Updated upstream
-                  child: UserTextFormField(hintTextTitle: "isim")
-=======
->>>>>>> Stashed changes
-                  child: TextFormField(
-                    controller: _isim,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    decoration: const InputDecoration(hintText: 'İsim'),
-=======
->>>>>>> Stashed changes
                   ),
                 ),
                 Padding(
@@ -207,13 +186,6 @@ class _RegisterFormState extends State<RegisterForm> {
                   child: CustomButton(
                     buttonText: "Kayıt Ol",
                     onPressed: () {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-                      //registerWithEmailAndPassword();
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
                       //registerWithEmailAndPassword();
                     },
                   ),

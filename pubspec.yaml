@@ -14,16 +14,8 @@ dependencies:
   google_sign_in: ^6.1.4
   firebase_auth: ^4.6.3
   firebase_core: ^2.14.0
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
   cloud_firestore: ^4.8.2
-=======
   curved_navigation_bar: ^1.0.3
-=======
->>>>>>> Stashed changes
-  curved_navigation_bar: ^1.0.3
-
->>>>>>> Stashed changes
   cupertino_icons: ^1.0.2
 
 dev_dependencies:

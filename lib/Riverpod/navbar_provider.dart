@@ -24,17 +24,10 @@ class navbarProvider extends ChangeNotifier {
         return const MyHomePage();
       case 1:
         return const profilePage();
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
       case 2:
         return const camPage();
-      default :
-=======
       default:
->>>>>>> Stashed changes
-=======
-      default:
->>>>>>> Stashed changes
         return const MyHomePage();
     }
   }
