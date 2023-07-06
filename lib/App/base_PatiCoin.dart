@@ -15,6 +15,6 @@ class _base_PatiCoinState extends ConsumerState<base_PatiCoin> {
     var watch = ref.watch(navbarRiverpod);
     return Scaffold(
       body: watch.body(),
-    ) ;
+    );
   }
 }

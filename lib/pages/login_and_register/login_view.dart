@@ -63,8 +63,23 @@ class _LoginViewState extends State<LoginView> {
   }
 }
 
-class BuildBg extends StatelessWidget {
+class BuildBg extends StatefulWidget {
   const BuildBg({super.key});
+
+  @override
+  State<BuildBg> createState() => _BuildBgState();
+}
+
+class _BuildBgState extends State<BuildBg> {
+  late final TextEditingController _email = TextEditingController();
+  late final TextEditingController _password = TextEditingController();
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,15 +124,21 @@ class BuildBg extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(
-                    left: 10,
+                TextFormField(
+                  controller: _email,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    hintText: 'Email',
                   ),
-                  child: UserTextFormField(hintTextTitle: "E-Posta"),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 20, left: 10),
-                  child: PasswordTextFormField(hintTextTitle: "Şifre"),
+                TextFormField(
+                  controller: _password,
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  decoration: const InputDecoration(hintText: 'Password'),
                 ),
               ],
             ),
