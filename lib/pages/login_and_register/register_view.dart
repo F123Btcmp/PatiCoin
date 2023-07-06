@@ -43,6 +43,14 @@ class RegisterForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+    final TextEditingController textcontrollername = TextEditingController();
+    TextEditingController ?textcontrollersurname = TextEditingController();
+    TextEditingController ?textcontrollerademail = TextEditingController();
+    TextEditingController ?textcontrolleradpassword = TextEditingController();
+
+
     return Align(
       alignment: Alignment.center,
       child: Padding(
@@ -88,7 +96,7 @@ class RegisterForm extends StatelessWidget {
                   padding: EdgeInsets.only(
                     left: 10,
                   ),
-                  child: UserTextFormField(hintTextTitle: "İsim"),
+                  child: UserTextFormField(hintTextTitle: "isim")
                 ),
                 const Padding(
                   padding: EdgeInsets.only(
@@ -113,7 +121,6 @@ class RegisterForm extends StatelessWidget {
                   child: CustomButton(
                     buttonText: "Kayıt Ol",
                     onPressed: () {
-                      registerWithEmailAndPassword();
                     },
                   ),
                 )

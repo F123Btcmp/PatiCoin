@@ -10,6 +10,9 @@ import 'package:streetanimals/pages/login_and_register/components/password_textf
 import 'package:streetanimals/pages/login_and_register/components/register_text.dart';
 import 'package:streetanimals/pages/login_and_register/components/user_textFormField.dart';
 
+import '../../models/user_info.dart';
+import '../../utils/db_firebase.dart';
+
 class LoginView extends StatefulWidget {
   const LoginView({Key? key});
 
@@ -47,7 +50,9 @@ class _LoginViewState extends State<LoginView> {
             padding: const EdgeInsets.only(top: 185),
             child: CustomButton(
               buttonText: 'Giriş Yap',
-              onPressed: () {},
+              onPressed: () {
+
+              },
             ),
           ),
           const RegisterText(),
