@@ -33,6 +33,15 @@ class dbFirebase {
         .update(changes);
   }
 
+  Future<DocumentSnapshot<Map<String, dynamic>>> isexistUSer(String collectionName, String documentId) async {
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await FirebaseFirestore.instance
+        .collection(collectionName)
+        .doc(documentId)
+        .get();
+
+    return documentSnapshot;
+  }
+
   Future<String?> foundUserid(String email) async { //çalışıyor.
     Future<List<Userinfo>> users = readUsers();
     String ?id ;

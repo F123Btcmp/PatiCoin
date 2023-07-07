@@ -11,13 +11,27 @@ class base_PatiCoin extends ConsumerStatefulWidget {
 }
 
 class _base_PatiCoinState extends ConsumerState<base_PatiCoin> {
-  @override
-  Widget build(BuildContext context) {
+  void loadData()  async {
+    // örnek gecikme
     var authRiv = ref.read(AuthenticationServiceRiverpod);
     authRiv.setisActive(authRiv.isUserLoggedIn());
-    ref.watch(AuthenticationServiceRiverpod).refresh;
+
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var navbarRiv = ref.watch(navbarRiverpod);
+    var authRiv = ref.read(AuthenticationServiceRiverpod);
+    ref.watch(AuthenticationServiceRiverpod).refresh; // gailba silebiliriz bakacağım.
     return Scaffold(
-      body : authRiv.body(),
+      bottomNavigationBar: navBar(),
+      body : navbarRiv.body(),
     );
   }
 }

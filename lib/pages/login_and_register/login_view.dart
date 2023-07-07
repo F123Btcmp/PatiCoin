@@ -84,7 +84,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           Padding(
                             padding: EdgeInsets.only(right: 180.0),
                             child: Text(
-                              "Hoşgeldin!",
+                              "Hoş geldin!",
                               style: TextStyle(
                                 fontFamily: FontConstants.montserratBold,
                                 fontSize: 26,

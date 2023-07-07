@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:streetanimals/pages/home_page.dart';
 import 'package:streetanimals/pages/login_and_register/login_view.dart';
+import 'package:streetanimals/utils/db_firebase.dart';
+
+import '../models/user_info.dart';
 
 class AuthenticationServiceProvider extends ChangeNotifier{
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -57,7 +61,45 @@ class AuthenticationServiceProvider extends ChangeNotifier{
       );
       final UserCredential userCredential = await firebaseAuth.signInWithCredential(credential);
       print("Kullanıcı giriş yaptı ${googleUser.email}");
-      setisActive(true);
+
+     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await dbFirebase().isexistUSer("users", firebaseAuth.currentUser!.uid);
+
+      if(documentSnapshot.exists) {
+        print("0********************KULLANICI VARRR ****************");
+      }else{
+        print("0********************KULLANICI YOKK ${firebaseAuth.currentUser!.uid} ****************");
+        List<String>? name_surname = firebaseAuth.currentUser?.displayName?.split(" ");
+        String ?name;
+        String ?surname;
+        if (name_surname!.length > 2){
+          name = "${name_surname[0]} ${name_surname[1]}";
+          surname = name_surname[2] ;
+        }else{
+          name = name_surname[0];
+          surname = name_surname[name_surname.length - 1];
+        }
+        Userinfo user = Userinfo(
+          name: name,
+          surname: surname,
+          email: firebaseAuth.currentUser?.email,
+          rewards_list: [],
+          picture: firebaseAuth.currentUser!.photoURL,
+          phone: firebaseAuth.currentUser!.phoneNumber,
+          donate: 0,
+          coin: 0,
+          post_list: [],
+          follow_list: [],
+          followers_list: [],
+          dm_list: [],
+          busket_list: [],
+          isactive: false,
+          id: firebaseAuth.currentUser!.uid,
+        );
+        dbFirebase().createUser(user, firebaseAuth);
+
+        setisActive(true);
+      }
+
       return userCredential;
     } catch (e) {
       print(e.toString());

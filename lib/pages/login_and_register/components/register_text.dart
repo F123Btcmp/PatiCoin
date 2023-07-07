@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/constans/text_pref.dart';
+import 'package:streetanimals/pages/login_and_register/register_view.dart';
 
 class RegisterText extends StatelessWidget {
   const RegisterText({super.key});
@@ -22,7 +22,9 @@ class RegisterText extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  RegisterView()));
+              },
               child: const Text(
                 "Kayıt ol",
                 style: TextStyle(

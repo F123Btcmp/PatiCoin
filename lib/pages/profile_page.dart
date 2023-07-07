@@ -4,6 +4,7 @@ import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/constans/text_pref.dart';
 import 'package:streetanimals/riverpod_management.dart';
 import '../classes/app_bar_profile.dart';
+import '../classes/nav_bar.dart';
 
 class profilePage extends ConsumerStatefulWidget {
   const profilePage({Key? key}) : super(key: key);
@@ -33,6 +34,7 @@ class _profilePage extends ConsumerState <profilePage> {
     return SafeArea(
       child: Scaffold(
         appBar: appBarCustom(title: 'Profil'),
+        bottomNavigationBar: navBar(),
         body: SingleChildScrollView(
           child: Column(
             children: [
