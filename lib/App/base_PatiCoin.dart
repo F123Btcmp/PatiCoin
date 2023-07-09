@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:streetanimals/classes/nav_bar2.dart';
+import 'package:streetanimals/pages/login_and_register/login_view.dart';
 import 'package:streetanimals/riverpod_management.dart';
 import '../classes/nav_bar.dart';
 
@@ -12,9 +14,6 @@ class base_PatiCoin extends ConsumerStatefulWidget {
 
 class _base_PatiCoinState extends ConsumerState<base_PatiCoin> {
   void loadData()  async {
-    // örnek gecikme
-    var authRiv = ref.read(AuthenticationServiceRiverpod);
-    authRiv.setisActive(authRiv.isUserLoggedIn());
 
   }
 
@@ -28,10 +27,17 @@ class _base_PatiCoinState extends ConsumerState<base_PatiCoin> {
   Widget build(BuildContext context) {
     var navbarRiv = ref.watch(navbarRiverpod);
     var authRiv = ref.read(AuthenticationServiceRiverpod);
+    authRiv.setisActive(authRiv.isUserLoggedIn());
     ref.watch(AuthenticationServiceRiverpod).refresh; // gailba silebiliriz bakacağım.
-    return Scaffold(
-      bottomNavigationBar: navBar(),
-      body : navbarRiv.body(),
-    );
+    if(authRiv.isUserLoggedIn()){
+      return SafeArea(
+        child: Scaffold(
+          bottomNavigationBar: navBar2(),
+          body : navbarRiv.body(),
+        ),
+      );
+    }else{
+      return LoginView();
+    }
   }
 }

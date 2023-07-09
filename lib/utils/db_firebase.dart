@@ -10,7 +10,6 @@ class dbFirebase {
     final docUser = firestore.collection("users").doc(firebaseAuth.currentUser!.uid);
     final json = user.toJson();
     await docUser.set(json);
-    //updateUser("users", docUser.id, {"id":docUser.id}); // Database rastgele atanan id değerini atıyoruz.
   }
 
   Future<List<Userinfo>> readUsers() async {
@@ -26,7 +25,22 @@ class dbFirebase {
     return users ;
   }
 
-  void updateUser(String collection,String id,Map<String, Object> changes) {
+  Future<Userinfo?> getUser(String ?uid) async {//girilen uid ye göre kullanıcıyı dönen fonksiyon.
+    Userinfo ? userr ;
+    print(uid);
+    var snapshot = await FirebaseFirestore.instance.collection("users").get();
+    if (snapshot != null && snapshot.docs.length > 0) {
+      snapshot.docs.forEach((document) {
+        var user = Userinfo.fromJson(document.data());
+        if (user!.id == uid){
+          userr = user;
+        }
+      });
+    }
+    return userr ;
+  }
+
+  void update(String collection,String id,Map<String, Object> changes) {
     firestore
         .collection(collection)
         .doc(id)
@@ -86,7 +100,13 @@ class dbFirebase {
     final docUser = firestore.collection("posts").doc();
     final json = post.toJson();
     await docUser.set(json);
-    updateUser("posts", docUser.id, {"id":docUser.id});
+    update("posts", docUser.id, {"id":docUser.id});
+    var user = dbFirebase().getUser(FirebaseAuth.instance.currentUser!.uid).then((value) {
+      print(value?.email);
+      List? a = value!.post_list;
+      a!.add(docUser.id);
+      dbFirebase().update("users", FirebaseAuth.instance.currentUser!.uid, {"post_list" : a});
+    });
   }
 
 }

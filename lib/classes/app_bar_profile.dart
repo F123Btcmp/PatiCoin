@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/riverpod_management.dart';
 
 class appBarCustom extends ConsumerWidget implements PreferredSizeWidget {
@@ -13,88 +14,89 @@ class appBarCustom extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var size = MediaQuery.of(context).size;
     var navbarRiv = ref.read(navbarRiverpod);
-    return Stack(
-      children: [
-        CustomPaint(
-          size: size,
-          painter: drawAppBar(),
-        ),
-        CustomPaint(
-          size: size,
-          painter: shadow1(),
-        ),
-        CustomPaint(
-          size: size,
-          painter: shadow2(),
-        ),
-        Positioned(
-          top: size.height * 0.01,
-          left: size.width * 0.3,
-          child: Text(
-            "$title",
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+    return SafeArea(
+      child: Stack(
+        children: [
+          CustomPaint(
+            size: size,
+            painter: drawAppBar(),
+          ),
+          CustomPaint(
+            size: size,
+            painter: shadow1(),
+          ),
+          CustomPaint(
+            size: size,
+            painter: shadow2(),
+          ),
+          Positioned(
+            top: size.height * 0.01,
+            left: size.width * 0.3,
+            child: Text(
+              "$title",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-        ),
-        Positioned(
-          right: size.width * 0.014,
-          top: size.height* 0.016,
-          child: SizedBox(
-            height: 25,
-            width: 80,
-            child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                child: DecoratedBox(
+          Positioned(
+            right: size.width * 0.014,
+            top: size.height* 0.016,
+            child: SizedBox(
+              height: 25,
+              width: 80,
+              child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.black,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: const [
-                      Icon(Icons.currency_bitcoin),
-                      Text(
-                        "123",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: const [
+                        Icon(Icons.currency_bitcoin),
+                        Text(
+                          "123",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ) ,
+                ) ,
+              ),
             ),
           ),
-        ),
-        Positioned(
-          child:GestureDetector(
-            onTap: () {
-              print(size.width);
-              navbarRiv.setCurrentindex(0);
-            },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: Container(
-                height: 40,
-                width: 40,
-                color: Colors.white.withOpacity(0.7),
-                child: const Icon(
-                  Icons.arrow_back_outlined,
-                  size: 33,
+          Positioned(
+            child:GestureDetector(
+              onTap: () {
+                navbarRiv.setCurrentindex(0);
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: Container(
+                  height: 40,
+                  width: 40,
+                  color: Colors.white.withOpacity(0.7),
+                  child: const Icon(
+                    Icons.arrow_back_outlined,
+                    size: 33,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -182,7 +184,7 @@ class drawAppBar extends CustomPainter{
     Paint paint = Paint()
       ..style = PaintingStyle.fill
       ..isAntiAlias = true
-      ..color = Color(0xff8C5073)
+      ..color = ColorConstants.pink2
       ..maskFilter = MaskFilter.blur(BlurStyle.solid, 15); // Burada gölgeyi ayarlayabilirsiniz.
 
     Path myPath = Path();

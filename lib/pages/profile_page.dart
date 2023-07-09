@@ -1,10 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/constans/text_pref.dart';
+import 'package:streetanimals/models/user_info.dart';
 import 'package:streetanimals/riverpod_management.dart';
+import 'package:streetanimals/utils/db_firebase.dart';
 import '../classes/app_bar_profile.dart';
-import '../classes/nav_bar.dart';
 
 class profilePage extends ConsumerStatefulWidget {
   const profilePage({Key? key}) : super(key: key);
@@ -16,164 +18,191 @@ class profilePage extends ConsumerStatefulWidget {
 class _profilePage extends ConsumerState <profilePage> {
   final ScrollController _scrollController = ScrollController();
   final PageController _pagecount = PageController();
+  Future<Userinfo?> ?user; // Değişkeni tanımladık
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    fetchData();
+    super.initState();
+  }
+
+  Future<void> fetchData() async {
+
+  }
+
   bool ?isLike ; //şimdilik
 
   @override
   Widget build(BuildContext context) {
     isLike = false;
     var size = MediaQuery.of(context).size;
-    double hsize = size.height * 0.2 ;
-    double wsize = size.width * 0.35 ;
     var profileRiv = ref.read(profileRiverpod);
+    var authRiv = ref.read(AuthenticationServiceRiverpod);
+    Future<Userinfo?> userpre = dbFirebase().getUser(FirebaseAuth.instance.currentUser?.uid);
+
     return SafeArea(
       child: Scaffold(
         appBar: appBarCustom(title: 'Profil'),
-        bottomNavigationBar: navBar(),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: size.width * 0.35,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          clipBehavior: Clip.none,
+          child: FutureBuilder(
+            future: userpre,
+            builder: (context, snapshot) {
+              if(snapshot.hasData) {
+                Userinfo? user = snapshot.data;
+                return Column(
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          "12.5K",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold
-                          ),
-                        ),
-                        Text("Takipçi"),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              SizedBox(
-                                height: size.width * 0.15,
-                                width:  size.width * 0.15,
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: Colors.black,
-                                  ),
+                    SizedBox(
+                      height: size.width * 0.35,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children:  [
+                              Text(
+                                "${user?.followers_list?.length}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold
                                 ),
                               ),
-                              SizedBox(
-                                  height:size.width * 0.14,
-                                  width: size.width * 0.14,
-                                  child: Image.network("https://cdn-icons-png.flaticon.com/512/3135/3135715.png")//Hero
-                              ),
-                              Positioned(
-                                bottom: 0.0,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Container(
-                                    height: 17,
-                                    width: 50,
-                                    color: Colors.black,
-                                    child: const Center(
-                                      child: Text(
-                                        "Admin",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 11
+                              Text("Takipçi"),
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    SizedBox(
+                                      height: size.width * 0.15,
+                                      width:  size.width * 0.15,
+                                      child: DecoratedBox(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(50),
+                                          color: Colors.black,
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              )
-                            ]
-                        ),
-                        Text("Name"),
-                        Text("Surmane")
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          "2.5K",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold
+                                    SizedBox(
+                                        height:size.width * 0.14,
+                                        width: size.width * 0.14,
+                                        child: Image.network("https://cdn-icons-png.flaticon.com/512/3135/3135715.png")//Hero
+                                    ),
+                                    Positioned(
+                                      bottom: 0.0,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: Container(
+                                          height: 17,
+                                          width: 50,
+                                          color: Colors.black,
+                                          child: Center(
+                                            child: Text(
+                                              user?.rewards_list?.length == 0
+                                              ? "Acemi"
+                                              : "Usta",
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 11
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ]
+                              ),
+                              Text("${user?.name}"),
+                              Text("${user?.surname}"),
+                            ],
                           ),
-                        ),
-                        Text("Takip"),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children:  [
+                              Text(
+                                "${user?.follow_list?.length}",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                              Text("Takip"),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  user?.id != FirebaseAuth.instance.currentUser?.uid
+                    ?Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        profilCustomBtn("Mesaj"),
+                        SizedBox(width: 10),
+                        profilCustomBtn("Takip Et"),
+                        SizedBox(width: 10),
+                        profilCustomBtn(""),
+                      ],
+                    )
+                  : Row(mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      profilCustomBtn("Düzenle"),
+                    ],
+                  ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          profileBox(user, size, "Gönderi"),
+                          profileBox(user, size, "Rozetler"),
+                          profileBox(user, size, "Bağış"),
+                        ],
+                      ),
+                    ), //info
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        profileBtn(context, size),
                       ],
                     ),
+                    SizedBox(
+                      height: 500,
+                      child: PageView(
+                          onPageChanged: (value) {
+                            if(value == 1) {
+                              profileRiv.setChoice("ilanlar");
+                            }else{
+                              profileRiv.setChoice("gönderiler");
+                            }
+                          },
+                          controller: _pagecount,
+                          scrollDirection: Axis.horizontal,
+                          children:[
+                            firstPage(context, size, user),
+                            secondPage(context, size)
+                          ]
+                      ),
+                    ),
                   ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  profilCustomBtn("Mesaj"),
-                  SizedBox(width: 10),
-                  profilCustomBtn("Takip Et"),
-                  SizedBox(width: 10),
-                  profilCustomBtn(""),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    profileBox(size, "Gönderi"),
-                    profileBox(size, "Rozetler"),
-                    profileBox(size, "Bağış"),
-                  ],
-                ),
-              ), //info
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  profileBtn(context, size),
-                ],
-              ),
-              SizedBox(
-                height:  size.height * 0.15 * 9,
-                child: PageView(
-                    onPageChanged: (value) {
-                      if(value == 1) {
-                        setState(() {
-                          choice = "ilanlar";
-                        });
-                      }else{
-                        setState(() {
-                          choice = "gönderiler";
-                        });
-                      }
-                    },
-                    controller: _pagecount,
-                    scrollDirection: Axis.horizontal,
-                    children:[
-                      firstPage(context, size),
-                      secondPage(context, size)
-                    ]
-                ),
-              ),
-            ],
+                );
+              }else{
+                return Text("Giriş yapılamadı Hacker çık git çabuk");
+              }
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget profileBox(Size size, String title) {
+  Widget profileBox(Userinfo ?user, Size size, String title) {
     var Cheight = size.width * 0.26;
     var Cwidth = size.width * 0.25;
     IconData ?myIcon ;
@@ -220,11 +249,11 @@ class _profilePage extends ConsumerState <profilePage> {
                         ),
                         textMod("$title"),
                         title == "Gönderi"
-                            ? textMod("24")
+                              ? textMod("${user?.post_list?.length}")
                             : title == "Rozetler"
-                            ? const textMod("widget")
+                              ? const textMod("widget")
                             : title == "Bağış"
-                            ?textMod("321 PC")
+                              ?textMod("${user?.donate} PC")
                             :textMod("?")
                       ],
                     ),
@@ -279,18 +308,12 @@ class _profilePage extends ConsumerState <profilePage> {
       ),
     );
   }
-
-  double  ? pre_ ;
-  String choice = "gönderiler" ;
   Widget profileBtn(BuildContext context, Size size) {
-    if (choice == "gönderiler"){
-      setState(() {
-        pre_ = size.width * 0.21;
-      });
+    var profileRiv = ref.watch(profileRiverpod);
+    if (profileRiv.choice == "gönderiler"){
+      profileRiv.setpre(size.width * 0.21);
     }else{
-      setState(() {
-        pre_ = size.width * 0.599;
-      });
+      profileRiv.setpre(size.width * 0.599);
     }
     return SizedBox(
       width: size.width,
@@ -299,7 +322,7 @@ class _profilePage extends ConsumerState <profilePage> {
         children: [
           AnimatedPositioned(
             bottom: 0,
-            left: pre_,
+            left: profileRiv.pre,
             duration: Duration(milliseconds: 200),
             curve: Curves.linear,
             child:const SizedBox(
@@ -316,9 +339,7 @@ class _profilePage extends ConsumerState <profilePage> {
               GestureDetector(
                   onTap: () {
                     _pagecount.animateTo(0, duration: Duration(milliseconds: 400), curve: Curves.linear);
-                    setState(() {
-                      choice = "gönderiler" ;
-                    });
+                    profileRiv.setChoice("Gönderiler");
                   },
                   child: const Text(
                     "Gönderiler",
@@ -332,9 +353,7 @@ class _profilePage extends ConsumerState <profilePage> {
               GestureDetector(
                   onTap: () {
                     _pagecount.animateTo(size.width, duration: Duration(milliseconds: 400), curve: Curves.linear);
-                    setState(() {
-                      choice = "ilanlar" ;
-                    });
+                    profileRiv.setChoice("ilanlar");
                   },
                   child: const Text(
                     "İlanlar",
@@ -351,97 +370,86 @@ class _profilePage extends ConsumerState <profilePage> {
       ),
     );
   }
-  Widget firstPage(BuildContext context, Size size) {
-    return GridView.count(
-        padding: EdgeInsets.symmetric(vertical:  5, horizontal: 25),
-        crossAxisCount: 2,
-        crossAxisSpacing: 15,
-        mainAxisSpacing: 15,
-        childAspectRatio: 0.87,
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        controller: _scrollController,
-        children: List.generate(9, (index) {
-          return SizedBox(
-            height: 90,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(width: 1),
-                  boxShadow:  const [
-                    BoxShadow(
-                        color: Colors.black38,
-                        blurRadius: 7,
-                        offset: Offset(3, 3)
-                    )
-                  ]
-              ),
-              child: Column(
-                children: [
-                  ClipRRect(
+  Widget firstPage(BuildContext context, Size size, Userinfo? user) {
+    return SizedBox(
+      height: user!.post_list!.length / 2 * 20,
+      width: size.width,
+      child: GridView.count(
+          padding: EdgeInsets.symmetric(vertical:  5, horizontal: 25),
+          crossAxisCount: 2,
+          crossAxisSpacing: 15,
+          mainAxisSpacing: 15,
+          childAspectRatio: 0.87,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          controller: _scrollController,
+          children: List.generate(user!.post_list!.length, (index) {
+            return SizedBox(
+              height: 20,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
-                      "assets/image/dog1.png",
+                    border: Border.all(width: 1),
+                    boxShadow:  const [
+                      BoxShadow(
+                          color: Colors.black38,
+                          blurRadius: 7,
+                          offset: Offset(3, 3)
+                      )
+                    ]
+                ),
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        "assets/image/dog1.png",
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children:  [
-                        Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isLike != isLike ;
-                                });
-                              },
-                              child: Icon(
-                                isLike!
-                                    ?Icons.favorite
-                                    :Icons.favorite_border,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children:  [
+                          Row(
+                            children: const [
+                              Icon(
+                                Icons.favorite,
                                 color: ColorConstants.pink,
                                 size: 17,
                               ),
-                            ),
-                            SizedBox(width: 5),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isLike != isLike ;
-                                });
-                              },
-                              child: Icon(
+                              SizedBox(width: 5),
+                              Icon(
                                 Icons.comment_rounded,
                                 color: ColorConstants.pink,
                                 size: 17,
                               ),
-                            ),
-                          ],
-                        ),
-                        const Text(
-                          "333 Beğeni",
-                          style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w400
+                            ],
                           ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                          const Text(
+                            "333 Beğeni",
+                            style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w400
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-        )
+            );
+          },
+          )
+      ),
     );
   }
   Widget secondPage(BuildContext context, Size size) {
     return SizedBox(
+      height: 200,
       width: size.width,
       child: ListView.builder(
         padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),

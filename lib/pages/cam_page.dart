@@ -39,6 +39,7 @@ class _camPage extends ConsumerState<camPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var authRiv = ref.read(AuthenticationServiceRiverpod);
+    var navbarRiv = ref.read(navbarRiverpod);
     return SafeArea(
         child: Scaffold(
           backgroundColor: ColorConstants.fillColorText,
@@ -278,9 +279,7 @@ class _camPage extends ConsumerState<camPage> {
                         }if(imageFile2 != null){
                           images.add(imageFile2!);
                         }
-                        print(images.length);
-                        print(images);
-                        await sharePost().uploadFileToStorage(images, _textcontroller, authRiv.firebaseAuth).then((value) => Navigator.of(context).pop());
+                        await sharePost().uploadFileToStorage(images, _textcontroller, authRiv.firebaseAuth).then((value) => navbarRiv.setCurrentindex(0));
                         images.clear();
                       },
                       child: Container( ///buton
@@ -311,10 +310,10 @@ class _camPage extends ConsumerState<camPage> {
                       ),
                     ),
                     GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("Paylaşmadan Devam Etmek istiyorum.")
+                      onTap: () {
+                        navbarRiv.setCurrentindex(0);
+                      },
+                      child: const Text("Paylaşmadan Devam Etmek istiyorum.")
                     ),
                   ],
                 ) ,

@@ -20,41 +20,42 @@ class _navBar extends ConsumerState<navBar> {
   Widget build(BuildContext context) {
     var navbarRiv = ref.read(navbarRiverpod);
     return CurvedNavigationBar(
-          backgroundColor: Colors.white,
-          color: ColorConstants.pink2,
-          animationDuration: const Duration(milliseconds: 400),
-          onTap: (index) {
-            print(index);
-            switch(index){
-              case 0 :
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage()));
-                break;
-              case 2 :
-                Navigator.push(context, MaterialPageRoute(builder: (context) => camPage()));
-                break;
-              case 4 :
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => profilePage()));
-                break;
-              default:
-            }
-          },
-          items:  [
-            Icon(
-              Icons.home,
-            ),
-            Icon(
-              Icons.layers,
-            ),
-            Icon(
-              Icons.camera_alt_outlined,
-            ),
-            Icon(
-              Icons.shopping_bag_outlined,
-            ),
-            Icon(
-              Icons.person,
-            ),
-          ]
+      backgroundColor: Colors.white,
+      color: ColorConstants.pink2,
+      animationDuration: const Duration(milliseconds: 400),
+      onTap: (index) {
+        switch(index){
+          case 0 :
+            navbarRiv.setCurrentindex(0);
+            break;
+          case 2 :
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => camPage()));
+            break;
+          case 4 :
+            navbarRiv.setCurrentindex(4);
+            break;
+          default:
+            return;
+        }
+        return;
+      },
+      items:  const [
+        Icon(
+          Icons.home,
+        ),
+        Icon(
+          Icons.layers,
+        ),
+        Icon(
+          Icons.camera_alt_outlined,
+        ),
+        Icon(
+          Icons.shopping_bag_outlined,
+        ),
+        Icon(
+          Icons.person,
+        ),
+      ]
     );
   }
 }
