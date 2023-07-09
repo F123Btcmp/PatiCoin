@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.f123.stateanimals.stateanimals">
+    package="com.f123.paticoin">
+    <uses-permission android:name="android.permission.CAMERA" />
    <application
         android:label="stateanimals"
         android:name="${applicationName}"
