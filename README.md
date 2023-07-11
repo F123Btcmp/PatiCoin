@@ -38,3 +38,30 @@ PatiCoin, hayvanları beslerken fotoğraf çekip coin kazanma ve bu coinlerle ma
 - Ürün Durumu: Ekran görüntüleri
 
 ![Screenshot_20230612_160041](https://github.com/F123Btcmp/StreetAnimals/assets/92324388/cf6bbbae-f2de-41cf-a5c4-2c4df09e7031)
+
+
+# Sprint 2
+
+## Tasarım
+
+Figma kullanarak uygulamamızın temasını ve renklerini belirleyip tasarımlarımızı oluşturduk. Yapılması gereken tüm sayfaları başlıklarına göre sınıflandırıp, tasarımlarımızın yapılabilitesini Discord kanalımız üzerinden tartıştık. Oluşturduğumuz figma tasarımları :
+<img src="https://github.com/F123Btcmp/StreetAnimals/assets/79331212/b6e3f56d-920b-4d12-8c0e-f9857f79c347" width=80% height=50%>
+
+
+## Kodlama
+
+### Giriş ve Kayıt ol ekranı
+Giriş ve kayıt olma sayfalarının tasarımı ve kodlama kısmı bitti. Aynı zamanda firebase ile entegrasyonu gerçekleştirildi. Uygulamamıza uygun bir isim düşündük ve PatiCoin ismininde karar kıldık. 
+
+<img src="https://github.com/F123Btcmp/StreetAnimals/assets/79331212/48ced652-e100-4c1b-aa28-053514f756e0" width=50% height=40%>  
+<img src="https://github.com/F123Btcmp/StreetAnimals/assets/79331212/f71c03c8-e9f3-4680-8fb6-7362c71591b4" width=50% height=40%>
+
+### Profil
+
+Profil kısmı tamamlanıldı ve top barı özel bir çizim kodu ile oluşturuldu. Bu sayfada kullanıcalar kendi postlarını, hayvanları beslemeleri sayesinde kazandıkları rozetleri ve eğer kayıp hayvan ilanları var ise onları görüntüleyebilecekler.
+<img src="https://github.com/F123Btcmp/StreetAnimals/assets/79331212/e5ea4eba-76d2-4a1e-8959-90e389884857" width=50% height=50%>
+
+### Paylaşım yapma ekranı
+
+Hayvanları beslerken çekilecek fotoğraflar galeriden yüklenemeyip, sadece anlık olarak çekilebilecek. Bu sayede sistemimiz tarafından onaylanan fotoğraflar -hayvan besleme fotoğrafları dışındakiler onaylanmayacaktır- ödüllendirilerek sadece uygulama içerisinde harcanabilecek PatiCoin isimli sanal paradan kazanılacaktır. Bu para sayesinde mağazamızdan hayvan mamaları satın alınılabilir. Çekeceğimiz fotoğraf için aşağıdaki ekran kullanılacaktır. Kod ve firebase entegrasyonu full bir şekilde çalışmaktadır.
+<img src="https://github.com/F123Btcmp/StreetAnimals/assets/79331212/bd8c4a53-3754-4ace-b3aa-64d61ddcaa09" width=50% height=50%>
