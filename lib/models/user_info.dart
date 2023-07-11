@@ -8,6 +8,7 @@ class Userinfo {
   bool ?isactive;
   String ?picture;
   String ?phone;
+  String ? join_us_datetime;
   List ? rewards_list;
   List ? busket_list;
   List ? dm_list;
@@ -26,6 +27,7 @@ class Userinfo {
     this.isactive,
     this.picture,
     this.phone ,
+    this.join_us_datetime,
     this.rewards_list ,
     this.busket_list ,
     this.dm_list ,
@@ -45,6 +47,7 @@ class Userinfo {
     "donate" : donate,
     "isactive" : isactive,
     "phone" : phone,
+    "join_us_datetime" : join_us_datetime,
     "rewards_list" : rewards_list,
     "busket_list" : busket_list,
     "dm_list" : dm_list,
@@ -64,6 +67,7 @@ class Userinfo {
       donate : json["donate"],
       isactive : json["isactive"],
       phone : json["phone"],
+      join_us_datetime :json["join_us_datetime"],
       rewards_list : json["rewards_list"],
       busket_list : json["busket_list"],
       dm_list : json["dm_list"],

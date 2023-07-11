@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:streetanimals/constans/material_color.dart';
+import 'package:streetanimals/pages/cam_page.dart';
 import 'package:streetanimals/riverpod_management.dart';
 
 class navBar2 extends ConsumerWidget {
@@ -57,17 +58,23 @@ class navBar2 extends ConsumerWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    navbarRiv.setCurrentindex(2);
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => camPage()));
                   },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.camera_alt_outlined,
-                        color: Colors.white,
-                      ),
-                      navbarRiv.currentindex == 2 ? bottomPoint() : const SizedBox(width: 1)
-                    ],
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: ColorConstants.fillColorText.withOpacity(0.4),
+                      shape: BoxShape.circle
+                    ),
+                    width: size.width * 0.1,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(
+                          Icons.camera_alt_outlined,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 GestureDetector(

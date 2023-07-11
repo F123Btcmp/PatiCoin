@@ -45,7 +45,6 @@ class _profilePage extends ConsumerState <profilePage> {
     var profileRiv = ref.read(profileRiverpod);
     var authRiv = ref.read(AuthenticationServiceRiverpod);
     Future<Userinfo?> userpre = dbFirebase().getUser(FirebaseAuth.instance.currentUser?.uid);
-
     return SafeArea(
       bottom: false,
       top: false,
@@ -97,7 +96,12 @@ class _profilePage extends ConsumerState <profilePage> {
                                     SizedBox(
                                         height:size.width * 0.17,
                                         width: size.width * 0.17,
-                                        child: Image.network("https://cdn-icons-png.flaticon.com/512/3135/3135715.png")//Hero
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(60),
+                                          child: Image.network(
+                                              "${user!.picture}",
+                                          ),
+                                        )//Hero
                                     ),
                                     Positioned(
                                       bottom: 0.0,
@@ -109,9 +113,11 @@ class _profilePage extends ConsumerState <profilePage> {
                                           color: Colors.black,
                                           child: Center(
                                             child: Text(
-                                              user?.rewards_list?.length == 0
+                                              user.post_list!.length < 5
                                               ? "Acemi"
-                                              : "Usta",
+                                              : user.post_list!.length >= 5 && user.post_list!.length < 15
+                                                ?"Deneyim"
+                                                : "Üstat",
                                               style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 13
@@ -158,16 +164,19 @@ class _profilePage extends ConsumerState <profilePage> {
                     ?Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        profilCustomBtn("Mesaj"),
+                        profilCustomBtn(context, "Mesaj"),
                         SizedBox(width: 10),
-                        profilCustomBtn("Takip Et"),
+                        profilCustomBtn(context, "Takip Et"),
                         SizedBox(width: 10),
-                        profilCustomBtn(""),
+                        profilCustomBtn(context, ""),
                       ],
                     )
-                  : Row(mainAxisAlignment: MainAxisAlignment.center,
+                  : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      profilCustomBtn("Düzenle"),
+                      profilCustomBtn(context, "Düzenle"),
+                      SizedBox(width: size.width * 0.03),
+                      profilCustomBtn(context, "Çıkış Yap"),
                     ],
                   ),
                     Padding(
@@ -188,7 +197,7 @@ class _profilePage extends ConsumerState <profilePage> {
                       ],
                     ),
                     SizedBox(
-                      height: user!.post_list!.length / 2 * size.height * 0.29,
+                      height: size.height* 0.1 + user!.post_list!.length / 2 * size.height * 0.29,
                       child: PageView(
                           onPageChanged: (value) {
                             if(value == 1) {
@@ -266,14 +275,14 @@ class _profilePage extends ConsumerState <profilePage> {
                           color: Colors.white,
                           size: 30,
                         ),
-                        textMod("$title"),
+                        textMod("$title", 15, Colors.white),
                         title == "Gönderi"
-                              ? textMod("${user?.post_list?.length}")
+                              ? textMod("${user?.post_list?.length}", 15, Colors.white)
                             : title == "Rozetler"
-                              ? const textMod("widget")
+                              ? textMod("Widgets", 15, Colors.white)
                             : title == "Bağış"
-                              ?textMod("${user?.donate} PC")
-                            :textMod("?")
+                              ?textMod("${user?.donate} PC", 15, Colors.white)
+                            :textMod("?", 15, Colors.white)
                       ],
                     ),
                   ),
@@ -283,7 +292,8 @@ class _profilePage extends ConsumerState <profilePage> {
       ),
     );
   }
-  Widget profilCustomBtn(String title) {
+  Widget profilCustomBtn(BuildContext context, String title) {
+    var authRiv = ref.read(AuthenticationServiceRiverpod);
     IconData ?myicon ;
     if(title == "Mesaj"){
       myicon = Icons.mail ;
@@ -291,12 +301,17 @@ class _profilePage extends ConsumerState <profilePage> {
       myicon = Icons.add;
     }else if(title == "Takip") {
       myicon = Icons.minimize ;
-    } else {
+    }else if(title == "Çıkış Yap"){
+      myicon = Icons.logout;
+    }
+    else {
       myicon = Icons.more_horiz;
     }
     return InkWell(
       onTap: () {
-        print("viiyyğğhh");
+        if(title == "Çıkış Yap"){
+          authRiv.signOut().then((value) => authRiv.refreshRiv());
+        }
       },
       child: DecoratedBox(decoration: BoxDecoration(
           color: Colors.black,

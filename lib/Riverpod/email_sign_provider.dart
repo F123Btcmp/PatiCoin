@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:ntp/ntp.dart';
 import 'package:streetanimals/pages/home_page.dart';
 import 'package:streetanimals/pages/login_and_register/login_view.dart';
 import 'package:streetanimals/utils/db_firebase.dart';
@@ -84,26 +85,30 @@ class AuthenticationServiceProvider extends ChangeNotifier{
           name = name_surname[0];
           surname = name_surname[name_surname.length - 1];
         }
-        Userinfo user = Userinfo(
-          name: name,
-          surname: surname,
-          email: firebaseAuth.currentUser?.email,
-          rewards_list: [],
-          picture: firebaseAuth.currentUser!.photoURL,
-          phone: firebaseAuth.currentUser!.phoneNumber,
-          donate: 0,
-          coin: 0,
-          post_list: [],
-          follow_list: [],
-          followers_list: [],
-          dm_list: [],
-          busket_list: [],
-          isactive: false,
-          id: firebaseAuth.currentUser!.uid,
-        );
-        dbFirebase().createUser(user, firebaseAuth);
+        await NTP.now().then((currentTime) {
+          Userinfo user = Userinfo(
+            name: name,
+            surname: surname,
+            email: firebaseAuth.currentUser?.email,
+            rewards_list: [],
+            picture: firebaseAuth.currentUser!.photoURL,
+            phone: firebaseAuth.currentUser!.phoneNumber,
+            join_us_datetime: "${currentTime}",
+            donate: 0,
+            coin: 0,
+            advert_list: [],
+            post_list: [],
+            follow_list: [],
+            followers_list: [],
+            dm_list: [],
+            busket_list: [],
+            isactive: false,
+            id: firebaseAuth.currentUser!.uid,
+          );
+          dbFirebase().createUser(user, firebaseAuth);
 
-        setisActive(true);
+          setisActive(true);
+        },);
       }
 
       return userCredential;

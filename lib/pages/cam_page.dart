@@ -23,8 +23,8 @@ class _camPage extends ConsumerState<camPage> {
   void _getFromCamera() async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.camera,
-      maxHeight: 500,
-      maxWidth: 500,
+      maxHeight: 1080,
+      maxWidth: 1080,
     );
 
 
@@ -32,7 +32,7 @@ class _camPage extends ConsumerState<camPage> {
       img.Image? originalImage = img.decodeImage(await pickedFile.readAsBytes());
 
       if (originalImage != null) {
-        img.Image resized = img.copyResize(originalImage, width: 400, height: 400);
+        img.Image resized = img.copyCrop(originalImage, x: 100, y: 200, width: 800, height: 600);
         File resizedFile = File(pickedFile.path)..writeAsBytesSync(img.encodeJpg(resized));
         setState(() {
           if (imageFile1 == null){
@@ -61,7 +61,7 @@ class _camPage extends ConsumerState<camPage> {
           backgroundColor: ColorConstants.fillColorText,
           body: SingleChildScrollView(
             child: SizedBox(
-              height: size.height * 0.92,
+              height: size.height * 0.85,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
                 child: Column(
@@ -130,7 +130,7 @@ class _camPage extends ConsumerState<camPage> {
                         }
                       },
                       child: SizedBox( ///foto kutusu
-                        height: size.height * .4,
+                        height: size.height * .32,
                         width:  double.infinity,
                         child: Container(
                           decoration: BoxDecoration(
@@ -174,9 +174,6 @@ class _camPage extends ConsumerState<camPage> {
                                   top: 5,
                                   child: IconButton(
                                       onPressed: () {
-                                        print("aaa");
-                                        print(imageFile2);
-                                        print(_pagecontroller.page);
                                         if(_pagecontroller.page == 0){
                                           setState(() {
                                             imageFile1!.deleteSync();
@@ -327,7 +324,7 @@ class _camPage extends ConsumerState<camPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        navbarRiv.setCurrentindex(0);
+                        Navigator.of(context).pop();
                       },
                       child: const Text("Paylaşmadan Devam Etmek istiyorum.")
                     ),

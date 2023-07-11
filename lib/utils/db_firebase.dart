@@ -15,7 +15,7 @@ class dbFirebase {
   Future<List<Userinfo>> readUsers() async {
     Userinfo ? user ;
     List<Userinfo> users = [] ;
-    var snapshot = await FirebaseFirestore.instance.collection("users").get();
+    var snapshot = await firestore.collection("users").get();
     if (snapshot != null && snapshot.docs.length > 0) {
       snapshot.docs.forEach((document) {
         user = Userinfo.fromJson(document.data());
@@ -25,10 +25,23 @@ class dbFirebase {
     return users ;
   }
 
+  Future<List<Postinfo>> readPosts() async {
+    Postinfo ? post ;
+    List<Postinfo> posts = [] ;
+    var snapshot = await firestore.collection("posts").get();
+    if (snapshot != null && snapshot.docs.length > 0) {
+      snapshot.docs.forEach((document) {
+        post = Postinfo.fromJson(document.data());
+        posts.add(post!);
+      });
+    }
+    return posts ;
+  }
+
   Future<Userinfo?> getUser(String ?uid) async {//girilen uid ye göre kullanıcıyı dönen fonksiyon.
     Userinfo ? userr ;
     print(uid);
-    var snapshot = await FirebaseFirestore.instance.collection("users").get();
+    var snapshot = await firestore.collection("users").get();
     if (snapshot != null && snapshot.docs.length > 0) {
       snapshot.docs.forEach((document) {
         var user = Userinfo.fromJson(document.data());
@@ -63,6 +76,7 @@ class dbFirebase {
       users.forEach((user) {
         if(user.email == email){
           print(user.name);
+          id = user.id ;
         }
       });
     },

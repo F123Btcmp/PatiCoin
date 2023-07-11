@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/src/widgets/editable_text.dart';
+import 'package:ntp/ntp.dart';
 import 'package:streetanimals/models/post_info.dart';
 import 'package:streetanimals/utils/db_firebase.dart';
 import 'package:uuid/uuid.dart';
@@ -19,7 +20,7 @@ class sharePost {
       if (imageFile1 == null){
         String fileName1 = Uuid().v4();
         postImageFileName.add(fileName1);
-        Reference storageRef = _storage.ref().child("posts").child("kullanıcı_id").child("post_ID").child(fileName1);
+        Reference storageRef = _storage.ref().child("posts").child(_auth.currentUser!.uid).child(fileName1);
         imageFile1 = posts[0];
         await storageRef.putFile(File(imageFile1!.path));
         print("**********************1");
@@ -27,7 +28,8 @@ class sharePost {
       if(imageFile2 == null){
         String fileName2 = Uuid().v4();
         postImageFileName.add(fileName2);
-        Reference storageRef = _storage.ref().child("posts").child("kullanıcı_id").child("post_ID").child(fileName2);
+        Reference storageRef = _storage.ref().child("posts").child(_auth.currentUser!.uid).child(fileName2);
+
         imageFile2 = posts[1];
         await storageRef.putFile(File(imageFile2!.path));
         print("**********************2");
@@ -38,7 +40,8 @@ class sharePost {
       if (imageFile1 == null){
         String fileName1 = Uuid().v4();
         postImageFileName.add(fileName1);
-        Reference storageRef = _storage.ref().child("posts").child("kullanıcı_id").child("post_ID").child(fileName1);
+        Reference storageRef = _storage.ref().child("posts").child(_auth.currentUser!.uid).child(fileName1);
+
         imageFile1 = posts[0];
         await storageRef.putFile(File(imageFile1!.path));
         print("**********************1");
@@ -48,17 +51,30 @@ class sharePost {
   }
 
   Future<void> publish(List images, TextEditingController textcontroller, FirebaseAuth firebaseAuth) async {
-    Postinfo post = Postinfo(
-      text: textcontroller.text,
-      user_id: firebaseAuth.currentUser!.uid,
-      Province: "İstanbul",
-      district: "Başakşehir",
-      image_list: images,
-      id: "",
-      like_list: [],
-      comments_list: [],
-      datetime: "", ///yapılacak sunucu saatinen çekeceğim.
-     );
-    dbFirebase().createPost(post);
+    await NTP.now().then((currentTime) {
+      Postinfo post = Postinfo(
+        text: textcontroller.text,
+        user_id: firebaseAuth.currentUser!.uid,
+        Province: "İstanbul",
+        district: "Başakşehir",
+        image_list: images,
+        id: "",
+        like_list: [],
+        comments_list: [],
+        datetime: "${currentTime}", ///yapılacak sunucu saatinen çekeceğim.
+       );
+      dbFirebase().createPost(post);
+    });
+  }
+  
+  Future<String?> downPostImage(Postinfo post) async{
+    try {
+      var urlRef = _storage.ref().child("posts").child(post.user_id!).child(post.image_list![0]);
+      var imgUrl = await urlRef.getDownloadURL();
+      return imgUrl;
+    }catch(e){
+      print(e);
+      return null;
+    }
   }
 }
