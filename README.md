@@ -37,7 +37,8 @@ PatiCoin, hayvanları beslerken fotoğraf çekip coin kazanma ve bu coinlerle ma
 
 - Ürün Durumu: Ekran görüntüleri
 
-![Screenshot_20230612_160041](https://github.com/F123Btcmp/StreetAnimals/assets/92324388/cf6bbbae-f2de-41cf-a5c4-2c4df09e7031)
+<img src="https://github.com/F123Btcmp/StreetAnimals/assets/92324388/cf6bbbae-f2de-41cf-a5c4-2c4df09e7031" width=50% height=40%>
+
 
 
 # Sprint 2
@@ -53,13 +54,16 @@ Figma kullanarak uygulamamızın temasını ve renklerini belirleyip tasarımlar
 ### Giriş ve Kayıt ol ekranı
 Giriş ve kayıt olma sayfalarının tasarımı ve kodlama kısmı bitti. Aynı zamanda firebase ile entegrasyonu gerçekleştirildi. Uygulamamıza uygun bir isim düşündük ve PatiCoin ismininde karar kıldık. 
 
-<img src="https://github.com/F123Btcmp/StreetAnimals/assets/79331212/48ced652-e100-4c1b-aa28-053514f756e0" width=50% height=40%>  
+
+<img src="https://github.com/F123Btcmp/StreetAnimals/assets/92324388/561e0534-5b65-41c7-a28c-1745bcafd5e2" width=50% height=40%>  
+
 <img src="https://github.com/F123Btcmp/StreetAnimals/assets/79331212/f71c03c8-e9f3-4680-8fb6-7362c71591b4" width=50% height=40%>
 
 ### Profil
 
 Profil kısmı tamamlanıldı ve top barı özel bir çizim kodu ile oluşturuldu. Bu sayfada kullanıcalar kendi postlarını, hayvanları beslemeleri sayesinde kazandıkları rozetleri ve eğer kayıp hayvan ilanları var ise onları görüntüleyebilecekler.
-<img src="https://github.com/F123Btcmp/StreetAnimals/assets/79331212/e5ea4eba-76d2-4a1e-8959-90e389884857" width=50% height=50%>
+
+<img src="https://github.com/F123Btcmp/StreetAnimals/assets/92324388/1182f9a9-39fd-4e21-a96b-ccd3043416cf" width=50% height=50%>
 
 ### Paylaşım yapma ekranı
 
