@@ -21,6 +21,7 @@ dependencies:
   firebase_storage: ^11.2.4
   permission_handler: ^10.4.1
   uuid: ^3.0.7
+  image: ^4.0.17
 
 
 dev_dependencies:

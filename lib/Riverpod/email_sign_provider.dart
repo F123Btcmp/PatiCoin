@@ -15,6 +15,12 @@ class AuthenticationServiceProvider extends ChangeNotifier{
   Stream<User?> get authStateChanges => firebaseAuth.authStateChanges();
   bool ?isActive ;
   bool ?refresh ; // sayfayı rebuild yapabilmek için tanımladım. Base_Paticoin de.
+  Userinfo ? user;
+
+  void loadUser(Userinfo user){
+    this.user = user;
+    notifyListeners();
+  }
 
   String? getUsereid(){
     return firebaseAuth.currentUser!.uid;

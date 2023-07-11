@@ -32,6 +32,8 @@ class _base_PatiCoinState extends ConsumerState<base_PatiCoin> {
     if(authRiv.isUserLoggedIn()){
       return SafeArea(
         child: Scaffold(
+          extendBody: true,
+          resizeToAvoidBottomInset: false,
           bottomNavigationBar: navBar2(),
           body : navbarRiv.body(),
         ),

@@ -14,6 +14,7 @@ class Userinfo {
   List ? follow_list;
   List ? followers_list;
   List ? post_list;
+  List ? advert_list;
 
   Userinfo({
     this.id = "",
@@ -31,6 +32,7 @@ class Userinfo {
     this.follow_list ,
     this.followers_list ,
     this.post_list ,
+    this.advert_list,
   });
 
   Map<String, dynamic> toJson() => { // kullanımı "final json = User.tojson()" şeklindedir.
@@ -49,6 +51,7 @@ class Userinfo {
     "follow_list" : follow_list,
     "followers_list" : followers_list,
     "post_list" : post_list,
+    "advert_list" :advert_list ,
   };
 
   static Userinfo fromJson(Map<String, dynamic> json) => Userinfo(
@@ -67,5 +70,6 @@ class Userinfo {
       follow_list : json["follow_list"],
       followers_list : json["followers_list"],
       post_list : json["post_list"],
+      advert_list : json["advert_list"],
   );
 }

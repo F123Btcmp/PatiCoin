@@ -47,17 +47,20 @@ class _profilePage extends ConsumerState <profilePage> {
     Future<Userinfo?> userpre = dbFirebase().getUser(FirebaseAuth.instance.currentUser?.uid);
 
     return SafeArea(
+      bottom: false,
+      top: false,
       child: Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: appBarCustom(title: 'Profil'),
-        body: SingleChildScrollView(
-          clipBehavior: Clip.none,
-          child: FutureBuilder(
-            future: userpre,
-            builder: (context, snapshot) {
-              if(snapshot.hasData) {
-                Userinfo? user = snapshot.data;
-                return Column(
+        body: FutureBuilder(
+          future: userpre,
+          builder: (context, snapshot) {
+            if(snapshot.hasData) {
+              Userinfo? user = snapshot.data;
+              return SingleChildScrollView(
+                child: Column(
                   children: [
+                    SizedBox(height: size.height * 0.05),
                     SizedBox(
                       height: size.width * 0.35,
                       child: Row(
@@ -82,8 +85,8 @@ class _profilePage extends ConsumerState <profilePage> {
                                   alignment: Alignment.center,
                                   children: [
                                     SizedBox(
-                                      height: size.width * 0.15,
-                                      width:  size.width * 0.15,
+                                      height: size.width * 0.18,
+                                      width:  size.width * 0.18,
                                       child: DecoratedBox(
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(50),
@@ -92,8 +95,8 @@ class _profilePage extends ConsumerState <profilePage> {
                                       ),
                                     ),
                                     SizedBox(
-                                        height:size.width * 0.14,
-                                        width: size.width * 0.14,
+                                        height:size.width * 0.17,
+                                        width: size.width * 0.17,
                                         child: Image.network("https://cdn-icons-png.flaticon.com/512/3135/3135715.png")//Hero
                                     ),
                                     Positioned(
@@ -101,8 +104,8 @@ class _profilePage extends ConsumerState <profilePage> {
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(20),
                                         child: Container(
-                                          height: 17,
-                                          width: 50,
+                                          height: size.height * 0.025,
+                                          width: size.width * 0.14,
                                           color: Colors.black,
                                           child: Center(
                                             child: Text(
@@ -111,7 +114,7 @@ class _profilePage extends ConsumerState <profilePage> {
                                               : "Usta",
                                               style: const TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 11
+                                                  fontSize: 13
                                               ),
                                             ),
                                           ),
@@ -120,8 +123,20 @@ class _profilePage extends ConsumerState <profilePage> {
                                     )
                                   ]
                               ),
-                              Text("${user?.name}"),
-                              Text("${user?.surname}"),
+                              SizedBox(height: 5),
+                              user?.name?.split(" ").length == 2
+                                  ? Column(
+                                    children: [
+                                        Text("${user?.name}") ,
+                                        Text("${user?.surname}"),
+                                      ],
+                                    )
+                                  : Row(
+                                    children: [
+                                        Text("${user?.name}") ,
+                                        Text("  ${user?.surname}"),
+                                      ],
+                                  )
                             ],
                           ),
                           Column(
@@ -173,7 +188,7 @@ class _profilePage extends ConsumerState <profilePage> {
                       ],
                     ),
                     SizedBox(
-                      height: 500,
+                      height: user!.post_list!.length / 2 * size.height * 0.29,
                       child: PageView(
                           onPageChanged: (value) {
                             if(value == 1) {
@@ -191,12 +206,16 @@ class _profilePage extends ConsumerState <profilePage> {
                       ),
                     ),
                   ],
-                );
-              }else{
-                return Text("Giriş yapılamadı Hacker çık git çabuk");
-              }
-            },
-          ),
+                ),
+              );
+            }else{
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: ColorConstants.pink2,
+                ),
+              );
+            }
+          },
         ),
       ),
     );
@@ -371,170 +390,159 @@ class _profilePage extends ConsumerState <profilePage> {
     );
   }
   Widget firstPage(BuildContext context, Size size, Userinfo? user) {
-    return SizedBox(
-      height: user!.post_list!.length / 2 * 20,
-      width: size.width,
-      child: GridView.count(
-          padding: EdgeInsets.symmetric(vertical:  5, horizontal: 25),
-          crossAxisCount: 2,
-          crossAxisSpacing: 15,
-          mainAxisSpacing: 15,
-          childAspectRatio: 0.87,
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          controller: _scrollController,
-          children: List.generate(user!.post_list!.length, (index) {
-            return SizedBox(
-              height: 20,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(width: 1),
-                    boxShadow:  const [
-                      BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 7,
-                          offset: Offset(3, 3)
-                      )
-                    ]
-                ),
-                child: Column(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        "assets/image/dog1.png",
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children:  [
-                          Row(
-                            children: const [
-                              Icon(
-                                Icons.favorite,
-                                color: ColorConstants.pink,
-                                size: 17,
-                              ),
-                              SizedBox(width: 5),
-                              Icon(
-                                Icons.comment_rounded,
-                                color: ColorConstants.pink,
-                                size: 17,
-                              ),
-                            ],
-                          ),
-                          const Text(
-                            "333 Beğeni",
-                            style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w400
-                            ),
-                          )
-                        ],
-                      ),
+    return GridView.count(
+        padding: EdgeInsets.symmetric(vertical:  5, horizontal: 25),
+        crossAxisCount: 2,
+        crossAxisSpacing: 15,
+        mainAxisSpacing: 15,
+        childAspectRatio: 0.87,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        controller: _scrollController,
+        children: List.generate(user!.post_list!.length, (index) {
+          return SizedBox(
+            height: 20,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(width: 1),
+                  boxShadow:  const [
+                    BoxShadow(
+                        color: Colors.black38,
+                        blurRadius: 7,
+                        offset: Offset(3, 3)
                     )
-                  ],
-                ),
+                  ]
               ),
-            );
-          },
-          )
-      ),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      "assets/image/dog1.png",
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:  [
+                        Row(
+                          children: const [
+                            Icon(
+                              Icons.favorite,
+                              color: ColorConstants.pink,
+                              size: 17,
+                            ),
+                            SizedBox(width: 5),
+                            Icon(
+                              Icons.comment_rounded,
+                              color: ColorConstants.pink,
+                              size: 17,
+                            ),
+                          ],
+                        ),
+                        const Text(
+                          "333 Beğeni",
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w400
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+        )
     );
   }
   Widget secondPage(BuildContext context, Size size) {
-    return SizedBox(
-      height: 200,
-      width: size.width,
-      child: ListView.builder(
-        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: 2,
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              Container(
-                height: size.height * 0.2,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: ColorConstants.lightpink,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
-                      child: Image.asset(
-                          "assets/image/dog1.png"
-                      ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.2,
-                      width: size.width * 0.47,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height : size.height * 0.16,
-                            width: size.width * 0.47,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: const [
-                                    Text("Ad"),
-                                    Text("Soyad"),
-                                    Text("il/ilçe"),
-                                    Text("Yayın Tarihi"),
-                                  ],
-                                ),
-
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: const [
-                                    Text("Gas"),
-                                    Text("Jhefert"),
-                                    Text(
-                                      "İstanbul/Beşiktaş",
-                                      style: TextStyle(
-                                          fontSize: 12
-                                      ),
-                                    ),
-                                    Text("08/06/2023"),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
-                              Icon(
-                                Icons.remove_red_eye,
-                                size: 17,
-                              ),
-                              Text("48 Görünülenme")
-                            ],
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: 2,
+      itemBuilder: (context, index) {
+        return Column(
+          children: [
+            Container(
+              height: size.height * 0.17,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: ColorConstants.lightpink,
               ),
-              const SizedBox(
-                height: 15,
-              )
-            ],
-          );
-        },
-      ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
+                    child: Image.asset(
+                        "assets/image/dog1.png"
+                    ),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.17,
+                    width: size.width * 0.5,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height : size.height * 0.13,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: const [
+                                  Text("Ad"),
+                                  Text("il/ilçe"),
+                                  Text("Yayın Tarihi"),
+                                ],
+                              ),
+
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: const [
+                                  Text("Gas"),
+                                  Text(
+                                    "İstanbul/Beşiktaş",
+                                    style: TextStyle(
+                                        fontSize: 12
+                                    ),
+                                  ),
+                                  Text("08/06/2023"),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: const [
+                            Icon(
+                              Icons.remove_red_eye,
+                              size: 17,
+                            ),
+                            Text("48 Görünülenme")
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            )
+          ],
+        );
+      },
     );
   }
 }

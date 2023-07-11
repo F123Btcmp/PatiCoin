@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/riverpod_management.dart';
@@ -18,19 +19,34 @@ class _camPage extends ConsumerState<camPage> {
   File ?imageFile2;
 
 
+
   void _getFromCamera() async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.camera,
-      maxHeight: 1080,
-      maxWidth: 1080,
+      maxHeight: 500,
+      maxWidth: 500,
     );
-    setState(() {
-      if (imageFile1 == null){
-        imageFile1 = File(pickedFile!.path);
-      }else{
-        imageFile2 = File(pickedFile!.path);
+
+
+    if (pickedFile != null) {
+      img.Image? originalImage = img.decodeImage(await pickedFile.readAsBytes());
+
+      if (originalImage != null) {
+        img.Image resized = img.copyResize(originalImage, width: 400, height: 400);
+        File resizedFile = File(pickedFile.path)..writeAsBytesSync(img.encodeJpg(resized));
+        setState(() {
+          if (imageFile1 == null){
+            imageFile1 = File(resizedFile!.path);
+          }else{
+            imageFile2 = File(resizedFile!.path);
+          }
+        });
+        // Do something with the resizedFile (e.g., display or upload)
       }
-    });
+    }
+
+
+
   }
   TextEditingController _textcontroller = TextEditingController();
   PageController _pagecontroller = PageController();
