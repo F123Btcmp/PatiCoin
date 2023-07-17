@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:streetanimals/constans/text_pref.dart';
 import 'package:streetanimals/models/post_info.dart';
@@ -88,7 +86,7 @@ class postUi extends StatelessWidget {
                         SizedBox(width: size.width * 0.02),
                         Text(
                             "@${user!.name}${user.surname}",
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12
                           ),
@@ -140,8 +138,8 @@ class postUi extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: size.height * 0.005),
-                          post!.comments_list!.length == 0
-                          ? Text("Henüz bir yorum yapılmamış")
+                          post!.comments_list!.isEmpty
+                          ? const Text("Henüz bir yorum yapılmamış")
                           : ListView.builder(
                             itemCount: post!.comments_list!.length > 2 ? 2 : post!.comments_list!.length ,
                             itemBuilder: (context, index) {
@@ -150,7 +148,7 @@ class postUi extends StatelessWidget {
                                 children: [
                                   textMod("${post!.comments_list![index]}",12, Colors.black),
                                   SizedBox(width: size.width * 0.05),
-                                  textMod("I fed my dog Sirius and earned 5 coins",12, Colors.black),
+                                  const textMod("I fed my dog Sirius and earned 5 coins",12, Colors.black),
                                 ],
                               );
                             },

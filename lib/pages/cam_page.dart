@@ -292,7 +292,7 @@ class _camPage extends ConsumerState<camPage> {
                         }if(imageFile2 != null){
                           images.add(imageFile2!);
                         }
-                        await sharePost().uploadFileToStorage(images, _textcontroller, authRiv.firebaseAuth).then((value) => navbarRiv.setCurrentindex(0));
+                        await sharePost().uploadFileToStorage(images, _textcontroller, authRiv.firebaseAuth).then((value) => Navigator.of(context).pop());
                         images.clear();
                       },
                       child: Container( ///buton

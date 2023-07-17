@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/constans/text_pref.dart';
+import 'package:streetanimals/models/post_info.dart';
 import 'package:streetanimals/models/user_info.dart';
 import 'package:streetanimals/riverpod_management.dart';
 import 'package:streetanimals/utils/db_firebase.dart';
+import 'package:streetanimals/utils/share_post.dart';
 import '../classes/app_bar_profile.dart';
 
 class profilePage extends ConsumerStatefulWidget {
@@ -18,7 +20,7 @@ class profilePage extends ConsumerStatefulWidget {
 class _profilePage extends ConsumerState <profilePage> {
   final ScrollController _scrollController = ScrollController();
   final PageController _pagecount = PageController();
-  Future<Userinfo?> ?user; // Değişkeni tanımladık
+  Userinfo ?user; // Değişkeni tanımladık
 
   @override
   void dispose() {
@@ -43,7 +45,6 @@ class _profilePage extends ConsumerState <profilePage> {
     isLike = false;
     var size = MediaQuery.of(context).size;
     var profileRiv = ref.read(profileRiverpod);
-    var authRiv = ref.read(AuthenticationServiceRiverpod);
     Future<Userinfo?> userpre = dbFirebase().getUser(FirebaseAuth.instance.currentUser?.uid);
     return SafeArea(
       bottom: false,
@@ -405,76 +406,92 @@ class _profilePage extends ConsumerState <profilePage> {
     );
   }
   Widget firstPage(BuildContext context, Size size, Userinfo? user) {
-    return GridView.count(
-        padding: EdgeInsets.symmetric(vertical:  5, horizontal: 25),
-        crossAxisCount: 2,
-        crossAxisSpacing: 15,
-        mainAxisSpacing: 15,
-        childAspectRatio: 0.87,
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        controller: _scrollController,
-        children: List.generate(user!.post_list!.length, (index) {
-          return SizedBox(
-            height: 20,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(width: 1),
-                  boxShadow:  const [
-                    BoxShadow(
-                        color: Colors.black38,
-                        blurRadius: 7,
-                        offset: Offset(3, 3)
-                    )
-                  ]
-              ),
-              child: Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
-                      "assets/image/dog1.png",
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children:  [
-                        Row(
-                          children: const [
-                            Icon(
-                              Icons.favorite,
-                              color: ColorConstants.pink,
-                              size: 17,
+    return FutureBuilder(
+      future: dbFirebase().getUserPosts(FirebaseAuth.instance.currentUser!.uid),
+      builder: (context, snapshot) {
+        if(snapshot != null){
+          List<Postinfo> myPost = snapshot.data!;
+          return GridView.count(
+              padding: EdgeInsets.symmetric(vertical:  5, horizontal: 25),
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 19,
+              childAspectRatio: 1,
+              physics: NeverScrollableScrollPhysics(),
+              controller: _scrollController,
+              children: List.generate(myPost.length, (index) {
+                return FutureBuilder(
+                  future: sharePost().downPostImage(myPost[index]),
+                  builder: (context, snapshot) {
+                    var imageadress = snapshot.data;
+                    if(snapshot != null){
+                      return DecoratedBox(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(width: 1),
+                            boxShadow:  const [
+                              BoxShadow(
+                                  color: Colors.black38,
+                                  blurRadius: 9,
+                                  offset: Offset(3, 3)
+                              )
+                            ]
+                        ),
+                        child: Column(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.network( //post images
+                                "$imageadress",
+                              ),
                             ),
-                            SizedBox(width: 5),
-                            Icon(
-                              Icons.comment_rounded,
-                              color: ColorConstants.pink,
-                              size: 17,
-                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children:  [
+                                  Row(
+                                    children: const [
+                                      Icon(
+                                        Icons.favorite,
+                                        color: ColorConstants.pink,
+                                        size: 17,
+                                      ),
+                                      SizedBox(width: 5),
+                                      Icon(
+                                        Icons.comment_rounded,
+                                        color: ColorConstants.pink,
+                                        size: 17,
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    "${myPost[index].like_list!.length} Beğeni",
+                                    style: const TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w400
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
                           ],
                         ),
-                        const Text(
-                          "333 Beğeni",
-                          style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w400
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
+                      );
+                    }else{
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
+                );
+              },
+            )
           );
-        },
-        )
+        }else{
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
   Widget secondPage(BuildContext context, Size size) {

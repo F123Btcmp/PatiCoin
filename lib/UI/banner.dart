@@ -72,6 +72,10 @@ class banner extends StatelessWidget {
                 size: size,
                 painter: shadowBanner(),
               ),
+              CustomPaint(
+                size: size,
+                painter: shadowBanner2(),
+              ),
               Positioned(
                 top: size.height* 0.015,
                 right: size.width * 0.03,
@@ -93,6 +97,40 @@ class shadowBanner extends CustomPainter{
 
     Paint paint = Paint()
       ..color = Colors.white.withOpacity(0.25)
+      ..isAntiAlias = true
+      ..style = PaintingStyle.fill ;
+
+    Path myPath = Path();
+    myPath.moveTo(size.width * 0.85, 0);
+
+    var firststartpoint = Offset(size.width * 0.58, size.height / 2); // eğim
+    var firstendpoint =  Offset(size.width * 0.89 , size.height ); //son nokta
+
+    var secondstartpoint = Offset(size.width * 0.95 , size.height );
+    var secondendpoint = Offset(size.width  , size.height  );
+
+    myPath.quadraticBezierTo(firststartpoint.dx, firststartpoint.dy, firstendpoint.dx, firstendpoint.dy);
+    myPath.quadraticBezierTo(secondstartpoint.dx, secondstartpoint.dy, secondendpoint.dx, secondendpoint.dy);
+
+
+    myPath.lineTo(size.width, 0);
+    canvas.drawPath(myPath, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    // TODO: implement shouldRepaint
+    return true;
+  }
+
+}
+class shadowBanner2 extends CustomPainter{
+  @override
+  void paint(Canvas canvas, Size size) {
+    // TODO: implement paint
+
+    Paint paint = Paint()
+      ..color = Colors.white.withOpacity(0.15)
       ..isAntiAlias = true
       ..style = PaintingStyle.fill ;
 

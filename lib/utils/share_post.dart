@@ -55,8 +55,6 @@ class sharePost {
       Postinfo post = Postinfo(
         text: textcontroller.text,
         user_id: firebaseAuth.currentUser!.uid,
-        Province: "İstanbul",
-        district: "Başakşehir",
         image_list: images,
         id: "",
         like_list: [],

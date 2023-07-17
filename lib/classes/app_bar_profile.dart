@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/riverpod_management.dart';
+import 'package:streetanimals/utils/db_firebase.dart';
 
 class appBarCustom extends ConsumerWidget implements PreferredSizeWidget {
   final String title;
@@ -14,6 +16,7 @@ class appBarCustom extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var size = MediaQuery.of(context).size;
     var navbarRiv = ref.read(navbarRiverpod);
+    var authRiv = ref.read(AuthenticationServiceRiverpod);
     return SafeArea(
       child: Stack(
         children: [
@@ -45,8 +48,8 @@ class appBarCustom extends ConsumerWidget implements PreferredSizeWidget {
             right: size.width * 0.014,
             top: size.height* 0.016,
             child: SizedBox(
-              height: 25,
-              width: 80,
+              height: size.height * 0.03,
+              width: size.width * 0.2,
               child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: Colors.black,
@@ -61,13 +64,23 @@ class appBarCustom extends ConsumerWidget implements PreferredSizeWidget {
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: const [
-                        Icon(Icons.currency_bitcoin),
-                        Text(
-                          "123",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold
-                          ),
+                      children: [
+                        const Icon(Icons.currency_bitcoin),
+                        FutureBuilder(
+                          future: dbFirebase().getUser(FirebaseAuth.instance.currentUser!.uid),
+                          builder:(context, snapshot) {
+                            if(snapshot.hasData){
+                              var Coin = snapshot.data!.coin;
+                              return Text(
+                                "$Coin",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                              );
+                            }else{
+                              return  Text("");
+                            }
+                          },
                         ),
                       ],
                     ),

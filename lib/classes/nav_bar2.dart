@@ -80,7 +80,6 @@ class navBar2 extends ConsumerWidget {
                 GestureDetector(
                   onTap: () {
                     navbarRiv.setCurrentindex(3);
-
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

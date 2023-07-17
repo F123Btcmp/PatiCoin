@@ -21,13 +21,15 @@ class _MyHomePageState extends ConsumerState <MyHomePage> {
   Widget build(BuildContext context) {
     var authRiv = ref.read(AuthenticationServiceRiverpod);
     var size = MediaQuery.of(context).size;
+    List<Widget> ?widgets ;
     return SingleChildScrollView(
+      physics: NeverScrollableScrollPhysics(),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.20),
         child: FutureBuilder(
           future: dbFirebase().readPosts(),
           builder: (context, snapshot) {
-            if(snapshot .hasData){
+            if(snapshot.hasData){
               List<Postinfo>? posts_list = snapshot.data!;
               return SizedBox(
                 height: size.height,
@@ -44,6 +46,7 @@ class _MyHomePageState extends ConsumerState <MyHomePage> {
                       );
                     }else{
                       print(posts_list.length);//bu hep çalışıyor.
+                      print("listeleme yapıyor");
                       return postUi(posts_list[index]);
                     }
                   },
