@@ -32,9 +32,9 @@ class _base_PatiCoinState extends ConsumerState<base_PatiCoin> {
     var authRiv = ref.read(AuthenticationServiceRiverpod);
     authRiv.setisActive(authRiv.isUserLoggedIn());
     dbFirebase().getUser(FirebaseAuth.instance.currentUser?.uid).then((value) {
-      ref.read(AuthenticationServiceRiverpod).loadUser(value!);
+      authRiv.loadUser(value!);
     });
-    ref.watch(AuthenticationServiceRiverpod).refresh; // coşkuyu bu veriyor// .
+    ref.watch(refreshRiverpod).state;//kullanıcı çıkış veya giriş yaptığında çalışır
     if(authRiv.isUserLoggedIn()){
       return SafeArea(
         child: Scaffold(

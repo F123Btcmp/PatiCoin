@@ -6,6 +6,7 @@ import 'package:streetanimals/constans/text_pref.dart';
 import 'package:streetanimals/models/post_info.dart';
 import 'package:streetanimals/models/user_info.dart';
 import 'package:streetanimals/pages/donate_page.dart';
+import 'package:streetanimals/pages/post_info_page.dart';
 import 'package:streetanimals/riverpod_management.dart';
 import 'package:streetanimals/utils/db_firebase.dart';
 import 'package:streetanimals/utils/share_post.dart';
@@ -46,7 +47,7 @@ class _profilePage extends ConsumerState <profilePage> {
     isLike = false;
     var size = MediaQuery.of(context).size;
     var profileRiv = ref.read(profileRiverpod);
-    Future<Userinfo?> userpre = dbFirebase().getUser(FirebaseAuth.instance.currentUser?.uid);
+    //ref.read(AuthenticationServiceRiverpod).signOut();
     return SafeArea(
       bottom: false,
       top: false,
@@ -54,10 +55,10 @@ class _profilePage extends ConsumerState <profilePage> {
         extendBodyBehindAppBar: true,
         appBar: appBarCustom(title: 'Profil'),
         body: FutureBuilder(
-          future: userpre,
+          future:  dbFirebase().getUser(FirebaseAuth.instance.currentUser?.uid),
           builder: (context, snapshot) {
             if(snapshot.hasData) {
-              Userinfo? user = snapshot.data;
+              Userinfo user = snapshot.data!;
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -71,7 +72,7 @@ class _profilePage extends ConsumerState <profilePage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children:  [
                               Text(
-                                "${user?.followers_list?.length}",
+                                "${user!.followers_list!.length}",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold
                                 ),
@@ -199,7 +200,7 @@ class _profilePage extends ConsumerState <profilePage> {
                       ],
                     ),
                     SizedBox(
-                      height: size.height* 0.1 + user!.post_list!.length / 2 * size.height * 0.29,
+                      height: size.height* 0.2 + user!.post_list!.length / 2 * size.height * 0.21,
                       child: PageView(
                           onPageChanged: (value) {
                             if(value == 1) {
@@ -315,7 +316,7 @@ class _profilePage extends ConsumerState <profilePage> {
     return InkWell(
       onTap: () {
         if(title == "Çıkış Yap"){
-          authRiv.signOut().then((value) => authRiv.refreshRiv());
+          authRiv.signOut().then((value) => ref.read(refreshRiverpod).changeState());
         }
       },
       child: DecoratedBox(decoration: BoxDecoration(
@@ -432,59 +433,66 @@ class _profilePage extends ConsumerState <profilePage> {
                     builder: (context, snapshot) {
                       var imageadress = snapshot.data;
                       if(snapshot != null){
-                        return DecoratedBox(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(width: 1),
-                              boxShadow:  const [
-                                BoxShadow(
-                                    color: Colors.black38,
-                                    blurRadius: 9,
-                                    offset: Offset(3, 3)
-                                )
-                              ]
-                          ),
-                          child: Column(
-                            children: [
-                              ClipRRect(
+                        return GestureDetector(
+                          onTap: () {
+                            ref.read(postRiverpod).setmyPost(myPost[index]);
+                            ref.read(postRiverpod).setimageadress(imageadress!);
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => postInfoPage()));
+                          },
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(12),
-                                child: Image.network( //post images
-                                  "$imageadress",
+                                border: Border.all(width: 1),
+                                boxShadow:  const [
+                                  BoxShadow(
+                                      color: Colors.black38,
+                                      blurRadius: 9,
+                                      offset: Offset(3, 3)
+                                  )
+                                ]
+                            ),
+                            child: Column(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network( //post images
+                                    "$imageadress",
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children:  [
-                                    Row(
-                                      children: const [
-                                        Icon(
-                                          Icons.favorite,
-                                          color: ColorConstants.pink,
-                                          size: 17,
-                                        ),
-                                        SizedBox(width: 5),
-                                        Icon(
-                                          Icons.comment_rounded,
-                                          color: ColorConstants.pink,
-                                          size: 17,
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      "${myPost[index].like_list!.length} Beğeni",
-                                      style: const TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w400
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children:  [
+                                      Row(
+                                        children: const [
+                                          Icon(
+                                            Icons.favorite,
+                                            color: ColorConstants.pink,
+                                            size: 17,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Icon(
+                                            Icons.comment_rounded,
+                                            color: ColorConstants.pink,
+                                            size: 17,
+                                          ),
+                                        ],
                                       ),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
+                                      Text(
+                                        "${myPost[index].like_list!.length} Beğeni",
+                                        style: const TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w400
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         );
                       }else{
@@ -507,7 +515,7 @@ class _profilePage extends ConsumerState <profilePage> {
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       physics: NeverScrollableScrollPhysics(),
-      itemCount: 2,
+      itemCount: 1,
       itemBuilder: (context, index) {
         return Column(
           children: [

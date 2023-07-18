@@ -136,7 +136,7 @@ class _donatePageState extends ConsumerState<donatePage>{
                             child: TextField(
                               keyboardType: TextInputType.number,
                               inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly
+                                FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                               ],
                               controller: _textcontroller,
                               decoration: const InputDecoration(
@@ -152,8 +152,9 @@ class _donatePageState extends ConsumerState<donatePage>{
                           GestureDetector(
                             onTap: () {
                               if(double.tryParse(_textcontroller.text)! < double.tryParse(authRiv.user!.coin!)!){
-                                var newvalue = (double.tryParse(authRiv.user!.coin!)! - double.tryParse(_textcontroller.text)!).toString() ;
-                                dbFirebase().update("users", FirebaseAuth.instance.currentUser!.uid, {"coin" : newvalue, "donate" : _textcontroller.text});
+                                var newvalue = (double.tryParse(authRiv.user!.coin!)! - double.tryParse(_textcontroller.text)!).toStringAsFixed(2).toString() ;
+                                var newDonateValue = (double.tryParse(authRiv.user!.donate!)! + double.tryParse(_textcontroller.text)!).toStringAsFixed(2).toString();
+                                dbFirebase().update("users", FirebaseAuth.instance.currentUser!.uid, {"coin" : newvalue, "donate" : newDonateValue});
                                 Navigator.of(context).pop();
                               }else{
                                 final snackBar = SnackBar(

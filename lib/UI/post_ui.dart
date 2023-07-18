@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:streetanimals/constans/text_pref.dart';
 import 'package:streetanimals/models/post_info.dart';
 import 'package:streetanimals/models/user_info.dart';
@@ -6,13 +7,15 @@ import 'package:streetanimals/utils/db_firebase.dart';
 import 'package:streetanimals/utils/share_post.dart';
 
 import '../constans/material_color.dart';
+import '../pages/post_info_page.dart';
+import '../riverpod_management.dart';
 
-class postUi extends StatelessWidget {
+class postUi extends ConsumerWidget {
   final Postinfo ? post;
   const postUi(this.post, {Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     var size = MediaQuery.of(context).size;
     Future<Userinfo?> user = dbFirebase().getUser(post!.user_id);
     Future<String?> post_image = sharePost().downPostImage(post!);
