@@ -3,8 +3,8 @@ class Userinfo {
   String ?name;
   String ?surname;
   String ?email;
-  int ?coin;
-  int ?donate;
+  String ?coin;
+  String ?donate;
   bool ?isactive;
   String ?picture;
   String ?phone;

@@ -5,6 +5,7 @@ import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/constans/text_pref.dart';
 import 'package:streetanimals/models/post_info.dart';
 import 'package:streetanimals/models/user_info.dart';
+import 'package:streetanimals/pages/donate_page.dart';
 import 'package:streetanimals/riverpod_management.dart';
 import 'package:streetanimals/utils/db_firebase.dart';
 import 'package:streetanimals/utils/share_post.dart';
@@ -244,6 +245,9 @@ class _profilePage extends ConsumerState <profilePage> {
     }
     return GestureDetector(
       onTap: () {
+        if(title == "Bağış"){
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => donatePage(),));
+        }
         print("selamun looo");
       },
       child: SizedBox(
@@ -410,84 +414,89 @@ class _profilePage extends ConsumerState <profilePage> {
       future: dbFirebase().getUserPosts(FirebaseAuth.instance.currentUser!.uid),
       builder: (context, snapshot) {
         if(snapshot != null){
-          List<Postinfo> myPost = snapshot.data!;
-          return GridView.count(
-              padding: EdgeInsets.symmetric(vertical:  5, horizontal: 25),
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 19,
-              childAspectRatio: 1,
-              physics: NeverScrollableScrollPhysics(),
-              controller: _scrollController,
-              children: List.generate(myPost.length, (index) {
-                return FutureBuilder(
-                  future: sharePost().downPostImage(myPost[index]),
-                  builder: (context, snapshot) {
-                    var imageadress = snapshot.data;
-                    if(snapshot != null){
-                      return DecoratedBox(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(width: 1),
-                            boxShadow:  const [
-                              BoxShadow(
-                                  color: Colors.black38,
-                                  blurRadius: 9,
-                                  offset: Offset(3, 3)
-                              )
-                            ]
-                        ),
-                        child: Column(
-                          children: [
-                            ClipRRect(
+          if(snapshot.data!.length == 0){
+            return Center(child: Text("Henüz Bir Gönderi yok."));
+          }else{
+            List<Postinfo> myPost = snapshot.data!;
+            return GridView.count(
+                padding: EdgeInsets.symmetric(vertical:  5, horizontal: 25),
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 19,
+                childAspectRatio: 1,
+                physics: NeverScrollableScrollPhysics(),
+                controller: _scrollController,
+                children: List.generate(myPost.length, (index) {
+                  return FutureBuilder(
+                    future: sharePost().downPostImage(myPost[index]),
+                    builder: (context, snapshot) {
+                      var imageadress = snapshot.data;
+                      if(snapshot != null){
+                        return DecoratedBox(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(12),
-                              child: Image.network( //post images
-                                "$imageadress",
+                              border: Border.all(width: 1),
+                              boxShadow:  const [
+                                BoxShadow(
+                                    color: Colors.black38,
+                                    blurRadius: 9,
+                                    offset: Offset(3, 3)
+                                )
+                              ]
+                          ),
+                          child: Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.network( //post images
+                                  "$imageadress",
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children:  [
-                                  Row(
-                                    children: const [
-                                      Icon(
-                                        Icons.favorite,
-                                        color: ColorConstants.pink,
-                                        size: 17,
-                                      ),
-                                      SizedBox(width: 5),
-                                      Icon(
-                                        Icons.comment_rounded,
-                                        color: ColorConstants.pink,
-                                        size: 17,
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    "${myPost[index].like_list!.length} Beğeni",
-                                    style: const TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w400
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children:  [
+                                    Row(
+                                      children: const [
+                                        Icon(
+                                          Icons.favorite,
+                                          color: ColorConstants.pink,
+                                          size: 17,
+                                        ),
+                                        SizedBox(width: 5),
+                                        Icon(
+                                          Icons.comment_rounded,
+                                          color: ColorConstants.pink,
+                                          size: 17,
+                                        ),
+                                      ],
                                     ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    }else{
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  },
-                );
-              },
-            )
-          );
+                                    Text(
+                                      "${myPost[index].like_list!.length} Beğeni",
+                                      style: const TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w400
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      }else{
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  );
+                },
+              )
+            );
+
+          }
         }else{
           return Center(child: CircularProgressIndicator());
         }

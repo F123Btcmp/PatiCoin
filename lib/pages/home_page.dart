@@ -30,28 +30,41 @@ class _MyHomePageState extends ConsumerState <MyHomePage> {
           future: dbFirebase().readPosts(),
           builder: (context, snapshot) {
             if(snapshot.hasData){
-              List<Postinfo>? posts_list = snapshot.data!;
-              return SizedBox(
-                height: size.height,
-                child: ListView.builder(
-                  itemCount: posts_list.length!,
-                  itemBuilder: (context, index) {
-                    if(index == 0 ){
-                      return Column(
-                        children: [
-                          Welcoming(),
-                          banner(),
-                          postUi(posts_list[index])
-                        ],
-                      );
-                    }else{
-                      print(posts_list.length);//bu hep çalışıyor.
-                      print("listeleme yapıyor");
-                      return postUi(posts_list[index]);
-                    }
-                  },
-                ),
-              );
+              List<Postinfo> posts_list = snapshot.data!;
+              if(posts_list.length != 0){
+                return SizedBox(
+                  height: size.height,
+                  child: ListView.builder(
+                    itemCount: posts_list.length!,
+                    itemBuilder: (context, index) {
+                      if(index == 0 ){
+                        return Column(
+                          children: [
+                            Welcoming(),
+                            banner(),
+                            postUi(posts_list[index])
+                          ],
+                        );
+                      }else{
+                        print(posts_list.length);//bu hep çalışıyor.
+                        print("listeleme yapıyor");
+                        return postUi(posts_list[index]);
+                      }
+                    },
+                  ),
+                );
+              }else{
+                return SizedBox(
+                  height: size.height * .4,
+                  child: Column(
+                    children: const [
+                      Welcoming(),
+                      banner(),
+                      Center(child: Text("Henüz Hiç Gönderi Yok")),
+                    ],
+                  ),
+                );
+              }
             }else{
               return const Center(
                 child: CircularProgressIndicator(

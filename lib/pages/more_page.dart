@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/constans/text_pref.dart';
+import 'package:streetanimals/pages/donate_page.dart';
 
 class morePage extends StatelessWidget {
   const morePage({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Padding(
       padding:  EdgeInsets.only(left: size.width * .06, right: size.width * .06, top: size.height * .02 , bottom:  size.height * .09 ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const textMod("Hayvanlara yardım etme konusunda yardıma mı ihtiyacın var ?", 14,Colors.black),
+          SizedBox(height: size.height * .02),
           const textMod("Burası senin için kategoriler", 13, ColorConstants.pink2),
-          boxForMore(size, "Donate"),
-          boxForMore(size, "Kayıp"),
-          boxForMore(size, "Donate"),
-          boxForMore(size, "Donate"),
+          SizedBox(height: size.height * .02),
+          boxForMore(context, size, "Donate"),
+          SizedBox(height: size.height * .02),
+          boxForMore(context, size, "Kayıp"),
         ],
       ),
     );
   }
-  Widget boxForMore(Size size,String name) {
+  Widget boxForMore(BuildContext context, Size size,String name) {
     return GestureDetector(
       onTap: () {
         if(name == "Donate"){
-          print("donate açılacak page");
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => donatePage()));
         }else if(name == "Kayıp"){
           print("Kayıp açılacak page");
         }

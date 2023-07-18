@@ -29,6 +29,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     var authRiv = ref.read(AuthenticationServiceRiverpod);
     return Scaffold(
       body: Stack(
@@ -40,12 +41,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
             height: double.infinity,
           ),
           const Cat(),
-          const Padding(
-            padding: EdgeInsets.only(
-              top: 155,
-              left: 177,
-            ),
-            child: Text(
+          Positioned(
+            top: size.height * .189,
+            left: size.width * .425,
+            child: const Text(
               'PatiCoin',
               style: TextStyle(
                   fontFamily: FontConstants.montserratBlack,
@@ -109,23 +108,25 @@ class _LoginViewState extends ConsumerState<LoginView> {
                         autocorrect: false,
                         decoration: const InputDecoration(hintText: 'Password'),
                       ),
+                      SizedBox(height: size.height * .04),
+                      CustomButton(
+                        buttonText: 'Giriş Yap',
+                        onPressed: () {
+                          authRiv.signInWithEmailAndPassword(_email.text, _password.text).then((value) => authRiv.refreshRiv());
+                        },
+                      ),
+                      const RegisterText(),
+                      Padding(
+                        padding:  EdgeInsets.only(left:  size.width  * .08),
+                        child: const LoginOptions(),
+                      ),
+
                     ],
                   ),
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 185),
-            child: CustomButton(
-              buttonText: 'Giriş Yap',
-              onPressed: () {
-                authRiv.signInWithEmailAndPassword(_email.text, _password.text).then((value) => authRiv.refreshRiv());
-              },
-            ),
-          ),
-          const RegisterText(),
-          const LoginOptions(),
         ],
       ),
     );

@@ -49,7 +49,7 @@ class appBarCustom extends ConsumerWidget implements PreferredSizeWidget {
             top: size.height* 0.016,
             child: SizedBox(
               height: size.height * 0.03,
-              width: size.width * 0.2,
+              width: size.width * 0.22,
               child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: Colors.black,
@@ -65,7 +65,9 @@ class appBarCustom extends ConsumerWidget implements PreferredSizeWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        const Icon(Icons.currency_bitcoin),
+                        Image.asset(
+                          "assets/image/coin.png"
+                        ),
                         FutureBuilder(
                           future: dbFirebase().getUser(FirebaseAuth.instance.currentUser!.uid),
                           builder:(context, snapshot) {

@@ -5,6 +5,7 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/riverpod_management.dart';
+import 'package:streetanimals/utils/db_firebase.dart';
 import 'package:streetanimals/utils/share_post.dart';
 
 class camPage extends ConsumerStatefulWidget {
@@ -87,34 +88,19 @@ class _camPage extends ConsumerState<camPage> {
                               SizedBox(
                                   height:size.width * 0.15,
                                   width: size.width * 0.15,
-                                  child: Image.network("https://cdn-icons-png.flaticon.com/512/3135/3135715.png")//Hero
-                              ),
-                              Positioned(
-                                bottom: 0.0,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Container(
-                                    height: size.width * 0.04,
-                                    width: size.width * 0.11,
-                                    color: Colors.black,
-                                    child: const Center(
-                                      child: Text(
-                                        "Admin",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 11
-                                        ),
-                                      ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(30),
+                                    child: Image.network(
+                                        "${authRiv.user!.picture}",
                                     ),
-                                  ),
-                                ),
-                              )
+                                  )//Hero
+                              ),
                             ]
                         ),
                         SizedBox(width: size.width * 0.07),
-                        const Text(
-                          "Name Surname",
-                          style: TextStyle(
+                        Text(
+                          "${authRiv.user!.name} ${authRiv.user!.surname}",
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                             fontSize: 18,
@@ -292,7 +278,13 @@ class _camPage extends ConsumerState<camPage> {
                         }if(imageFile2 != null){
                           images.add(imageFile2!);
                         }
-                        await sharePost().uploadFileToStorage(images, _textcontroller, authRiv.firebaseAuth).then((value) => Navigator.of(context).pop());
+                        await sharePost().uploadFileToStorage(images, _textcontroller, authRiv.firebaseAuth).then((value) {
+                          var newvalue = (double.tryParse(authRiv.user!.coin!)! + 0.3).toString();
+                          dbFirebase().update("users", authRiv.user!.id!, {"coin" : newvalue});
+                          authRiv.refreshRiv();
+                          Navigator.of(context).pop();
+                        });
+
                         images.clear();
                       },
                       child: Container( ///buton

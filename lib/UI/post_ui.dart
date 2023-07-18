@@ -45,6 +45,7 @@ class postUi extends StatelessWidget {
                 padding: EdgeInsets.only(left: size.width * 0.02),
                 child: FittedBox( //isim etiketi
                   child: Container(
+                    margin: EdgeInsets.all(1),
                     padding: EdgeInsets.symmetric(horizontal: size.width * 0.015, vertical: size.width * 0.007),
                     decoration: BoxDecoration(
                       color: ColorConstants.pink2,
@@ -103,6 +104,7 @@ class postUi extends StatelessWidget {
                 top: size.height * 0.33,
                 child: FittedBox(
                   child: Container(
+                    margin: EdgeInsets.all(1),
                     padding: EdgeInsets.symmetric(horizontal: size.width * 0.03, vertical:  size.width * 0.02),
                     decoration: const BoxDecoration(
                       color: ColorConstants.fillColorText,
@@ -120,6 +122,7 @@ class postUi extends StatelessWidget {
                       width: size.width,
                       child: Column(
                         children: [
+                          Text("${post!.text}"),
                           Row(
                             children: [
                               const Icon(

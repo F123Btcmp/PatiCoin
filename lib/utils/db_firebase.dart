@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:streetanimals/models/order_info.dart';
 import 'package:streetanimals/models/product_info.dart';
 import 'package:streetanimals/models/user_info.dart';
 import '../models/post_info.dart';
@@ -11,6 +12,18 @@ class dbFirebase {
     final docUser = firestore.collection("users").doc(firebaseAuth.currentUser!.uid);
     final json = user.toJson();
     await docUser.set(json);
+  }
+  void createProduct(Productinfo product) async {
+    final docProduct = firestore.collection("products").doc();
+    final json = product.toJson();
+    await docProduct.set(json);
+    dbFirebase().update("product", docProduct.id, {"id":docProduct.id});
+  }
+  void createOrder(Orderinfo order) async {
+    final docProduct = firestore.collection("orders").doc();
+    final json = order.toJson();
+    await docProduct.set(json);
+    dbFirebase().update("orders", docProduct.id, {"id":docProduct.id});
   }
 
   Future<List<Productinfo>> readProducts() async {
@@ -26,12 +39,6 @@ class dbFirebase {
     return products ;
   }
 
-  void createProduct(Productinfo product) async {
-    final docProduct = firestore.collection("products").doc();
-    final json = product.toJson();
-    await docProduct.set(json);
-    dbFirebase().update("posts", docProduct.id, {"id":docProduct.id});
-  }
 
   Future<List<Userinfo>> readUsers() async {
     Userinfo ? user ;
@@ -111,7 +118,7 @@ class dbFirebase {
     return userr ;
   }
 
-  void update(String collection,String id,Map<String, Object> changes) {
+  void update(String collection,String id,Map<String, Object> changes) async {
     firestore
         .collection(collection)
         .doc(id)

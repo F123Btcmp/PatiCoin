@@ -10,31 +10,28 @@ class RegisterText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 280, left: 50),
-        child: Row(
-          children: [
-            const Text(
-              "Hesabın yok mu?",
+      alignment: Alignment.center,
+      child: Row(
+        children: [
+          const Text(
+            "Hesabın yok mu?",
+            style: TextStyle(
+              fontFamily: FontConstants.montserratRegular,
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  RegisterView()));
+            },
+            child: const Text(
+              "Kayıt ol",
               style: TextStyle(
-                fontFamily: FontConstants.montserratRegular,
+                fontFamily: FontConstants.montserratBold,
+                color: (ColorConstants.black),
               ),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  RegisterView()));
-              },
-              child: const Text(
-                "Kayıt ol",
-                style: TextStyle(
-                  fontFamily: FontConstants.montserratBold,
-                  color: (ColorConstants.black),
-                ),
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

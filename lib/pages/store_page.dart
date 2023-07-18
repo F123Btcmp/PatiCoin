@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:streetanimals/Riverpod/product_riverpod.dart';
@@ -16,9 +15,9 @@ class storePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var size = MediaQuery.of(context).size;
-    var user = FirebaseAuth.instance.currentUser;
     var productRiv = ref.read(productRiverpod);
     var authRiv = ref.read(AuthenticationServiceRiverpod);
+    ref.watch(AuthenticationServiceRiverpod).refresh;
     return FutureBuilder(
       future: productRiv.refreshProducts(),
       builder:(context, snapshot) {

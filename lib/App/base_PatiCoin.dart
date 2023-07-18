@@ -15,7 +15,7 @@ class base_PatiCoin extends ConsumerStatefulWidget {
 
 class _base_PatiCoinState extends ConsumerState<base_PatiCoin> {
   void loadData()  async {
-    await dbFirebase().getUser(FirebaseAuth.instance.currentUser!.uid).then((value) {
+    await dbFirebase().getUser(FirebaseAuth.instance.currentUser?.uid).then((value) {
       ref.read(AuthenticationServiceRiverpod).loadUser(value!);
     });
   }
@@ -34,7 +34,7 @@ class _base_PatiCoinState extends ConsumerState<base_PatiCoin> {
     dbFirebase().getUser(FirebaseAuth.instance.currentUser?.uid).then((value) {
       ref.read(AuthenticationServiceRiverpod).loadUser(value!);
     });
-    ref.watch(AuthenticationServiceRiverpod).refresh; // gailba silebiliriz bakacağım.
+    ref.watch(AuthenticationServiceRiverpod).refresh; // coşkuyu bu veriyor// .
     if(authRiv.isUserLoggedIn()){
       return SafeArea(
         child: Scaffold(

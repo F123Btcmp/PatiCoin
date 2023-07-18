@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ntp/ntp.dart';
 import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/constans/text_pref.dart';
+import 'package:streetanimals/models/order_info.dart';
 import 'package:streetanimals/models/product_info.dart';
 import 'package:streetanimals/pages/product_info_page.dart';
 import 'package:streetanimals/riverpod_management.dart';
@@ -24,6 +26,7 @@ class _basketPageState extends ConsumerState<basketPage> {
     var size = MediaQuery.of(context).size ;
     var productRiv = ref.read(productRiverpod);
     ref.watch(productRiverpod).state;
+    List<String> orderId = [];
     productRiv.resetTotal();
     return SafeArea(
       child: Scaffold(
@@ -75,6 +78,7 @@ class _basketPageState extends ConsumerState<basketPage> {
                                   BusketList = [];
                                 });
                                 productRiv.changeState();
+                                Navigator.of(context).pop();
                               },
                               icon: const Icon(
                                 Icons.restore_from_trash_outlined,
@@ -94,6 +98,7 @@ class _basketPageState extends ConsumerState<basketPage> {
                       child: ListView.builder(
                         itemCount: BusketList!.length,
                         itemBuilder: (context, index) {
+                          orderId.add(BusketList![index].id!);
                           return basketPost(size,BusketList![index]);
                         },
                       ),
@@ -129,9 +134,37 @@ class _basketPageState extends ConsumerState<basketPage> {
                                 ],
                               ),
                               GestureDetector(
-                                onTap:() {
-                                  //dbFirebase().createProduct(Productinfo(name: "name", price: "price", image: "image", explanation: "explanation", category: "category"));
-                                  print("Sepeti onayladım");
+                                onTap:()  async {
+                                  var user = await dbFirebase().getUser(FirebaseAuth.instance.currentUser!.uid);
+                                  if(double.tryParse(user!.coin!)! < productRiv.totalCoin){
+                                    print("${user!.coin} paran yok");
+                                    final snackBar = SnackBar(
+                                      content: Text("Yeterli Coin yok, Yanlzca ${user!.coin} Coin var"),
+                                      duration: Duration(seconds: 1),
+                                      backgroundColor: Colors.black,
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                  }else{
+                                    print("Sepeti onayladım");
+                                    dbFirebase().update("users", FirebaseAuth.instance.currentUser!.uid, {"busket_list": []});
+                                    ref.read(AuthenticationServiceRiverpod).refreshRiv();
+                                    NTP.now().then((currenttime) {
+                                      dbFirebase().createOrder(
+                                          Orderinfo(
+                                            user_id: user.id,
+                                            product_id_list: orderId,
+                                            datetime: "$currenttime",
+                                          )
+                                      );
+                                    });
+                                    setState(() {
+                                      BusketList = [];
+                                    });
+                                    productRiv.changeState();
+                                    Navigator.of(context).pop();
+                                    var result = (double.tryParse(user!.coin!)! - productRiv.totalCoin).toString();
+                                    dbFirebase().update("users", FirebaseAuth.instance.currentUser!.uid,{"coin" : result});
+                                  }
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(5),
