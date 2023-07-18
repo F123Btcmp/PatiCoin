@@ -3,9 +3,9 @@ F-123
 # Ürün ile ilgili Bilgiler
 ## Takım Elemanları
 - Zeynep Nazlı Erşen: Product Owner
-- Rümeysa Ordu: Scrum Master
-- İbrahim Ethem Akbıyık: Team Member/Developer
-- Berat Berkay Abakay: Team Member/Developer
+- Rümeysa Ordu: Scrum Master  (kod yazmadı)
+- İbrahim Ethem Akbıyık: Team Member/Developer (kod yazmadı)
+- Berat Berkay Abakay: Team Member/Developer (kod yazmadı)
 
 ## Ürün İsmi
 --Pati Coin--
