@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/constans/text_pref.dart';
+import 'package:streetanimals/models/post_info.dart';
 import 'package:streetanimals/models/user_info.dart';
+import 'package:streetanimals/pages/donate_page.dart';
 import 'package:streetanimals/riverpod_management.dart';
 import 'package:streetanimals/utils/db_firebase.dart';
+import 'package:streetanimals/utils/share_post.dart';
 import '../classes/app_bar_profile.dart';
 
 class profilePage extends ConsumerStatefulWidget {
@@ -18,7 +21,7 @@ class profilePage extends ConsumerStatefulWidget {
 class _profilePage extends ConsumerState <profilePage> {
   final ScrollController _scrollController = ScrollController();
   final PageController _pagecount = PageController();
-  Future<Userinfo?> ?user; // Değişkeni tanımladık
+  Userinfo ?user; // Değişkeni tanımladık
 
   @override
   void dispose() {
@@ -43,21 +46,22 @@ class _profilePage extends ConsumerState <profilePage> {
     isLike = false;
     var size = MediaQuery.of(context).size;
     var profileRiv = ref.read(profileRiverpod);
-    var authRiv = ref.read(AuthenticationServiceRiverpod);
     Future<Userinfo?> userpre = dbFirebase().getUser(FirebaseAuth.instance.currentUser?.uid);
-
     return SafeArea(
+      bottom: false,
+      top: false,
       child: Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: appBarCustom(title: 'Profil'),
-        body: SingleChildScrollView(
-          clipBehavior: Clip.none,
-          child: FutureBuilder(
-            future: userpre,
-            builder: (context, snapshot) {
-              if(snapshot.hasData) {
-                Userinfo? user = snapshot.data;
-                return Column(
+        body: FutureBuilder(
+          future: userpre,
+          builder: (context, snapshot) {
+            if(snapshot.hasData) {
+              Userinfo? user = snapshot.data;
+              return SingleChildScrollView(
+                child: Column(
                   children: [
+                    SizedBox(height: size.height * 0.05),
                     SizedBox(
                       height: size.width * 0.35,
                       child: Row(
@@ -82,8 +86,8 @@ class _profilePage extends ConsumerState <profilePage> {
                                   alignment: Alignment.center,
                                   children: [
                                     SizedBox(
-                                      height: size.width * 0.15,
-                                      width:  size.width * 0.15,
+                                      height: size.width * 0.18,
+                                      width:  size.width * 0.18,
                                       child: DecoratedBox(
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(50),
@@ -92,26 +96,33 @@ class _profilePage extends ConsumerState <profilePage> {
                                       ),
                                     ),
                                     SizedBox(
-                                        height:size.width * 0.14,
-                                        width: size.width * 0.14,
-                                        child: Image.network("https://cdn-icons-png.flaticon.com/512/3135/3135715.png")//Hero
+                                        height:size.width * 0.17,
+                                        width: size.width * 0.17,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(60),
+                                          child: Image.network(
+                                              "${user!.picture}",
+                                          ),
+                                        )//Hero
                                     ),
                                     Positioned(
                                       bottom: 0.0,
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(20),
                                         child: Container(
-                                          height: 17,
-                                          width: 50,
+                                          height: size.height * 0.025,
+                                          width: size.width * 0.14,
                                           color: Colors.black,
                                           child: Center(
                                             child: Text(
-                                              user?.rewards_list?.length == 0
+                                              user.post_list!.length < 5
                                               ? "Acemi"
-                                              : "Usta",
+                                              : user.post_list!.length >= 5 && user.post_list!.length < 15
+                                                ?"Deneyim"
+                                                : "Üstat",
                                               style: const TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 11
+                                                  fontSize: 13
                                               ),
                                             ),
                                           ),
@@ -120,8 +131,20 @@ class _profilePage extends ConsumerState <profilePage> {
                                     )
                                   ]
                               ),
-                              Text("${user?.name}"),
-                              Text("${user?.surname}"),
+                              SizedBox(height: 5),
+                              user?.name?.split(" ").length == 2
+                                  ? Column(
+                                    children: [
+                                        Text("${user?.name}") ,
+                                        Text("${user?.surname}"),
+                                      ],
+                                    )
+                                  : Row(
+                                    children: [
+                                        Text("${user?.name}") ,
+                                        Text("  ${user?.surname}"),
+                                      ],
+                                  )
                             ],
                           ),
                           Column(
@@ -143,16 +166,19 @@ class _profilePage extends ConsumerState <profilePage> {
                     ?Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        profilCustomBtn("Mesaj"),
+                        profilCustomBtn(context, "Mesaj"),
                         SizedBox(width: 10),
-                        profilCustomBtn("Takip Et"),
+                        profilCustomBtn(context, "Takip Et"),
                         SizedBox(width: 10),
-                        profilCustomBtn(""),
+                        profilCustomBtn(context, ""),
                       ],
                     )
-                  : Row(mainAxisAlignment: MainAxisAlignment.center,
+                  : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      profilCustomBtn("Düzenle"),
+                      profilCustomBtn(context, "Düzenle"),
+                      SizedBox(width: size.width * 0.03),
+                      profilCustomBtn(context, "Çıkış Yap"),
                     ],
                   ),
                     Padding(
@@ -173,7 +199,7 @@ class _profilePage extends ConsumerState <profilePage> {
                       ],
                     ),
                     SizedBox(
-                      height: 500,
+                      height: size.height* 0.1 + user!.post_list!.length / 2 * size.height * 0.29,
                       child: PageView(
                           onPageChanged: (value) {
                             if(value == 1) {
@@ -191,12 +217,16 @@ class _profilePage extends ConsumerState <profilePage> {
                       ),
                     ),
                   ],
-                );
-              }else{
-                return Text("Giriş yapılamadı Hacker çık git çabuk");
-              }
-            },
-          ),
+                ),
+              );
+            }else{
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: ColorConstants.pink2,
+                ),
+              );
+            }
+          },
         ),
       ),
     );
@@ -215,6 +245,9 @@ class _profilePage extends ConsumerState <profilePage> {
     }
     return GestureDetector(
       onTap: () {
+        if(title == "Bağış"){
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => donatePage(),));
+        }
         print("selamun looo");
       },
       child: SizedBox(
@@ -247,14 +280,14 @@ class _profilePage extends ConsumerState <profilePage> {
                           color: Colors.white,
                           size: 30,
                         ),
-                        textMod("$title"),
+                        textMod("$title", 15, Colors.white),
                         title == "Gönderi"
-                              ? textMod("${user?.post_list?.length}")
+                              ? textMod("${user?.post_list?.length}", 15, Colors.white)
                             : title == "Rozetler"
-                              ? const textMod("widget")
+                              ? textMod("Widgets", 15, Colors.white)
                             : title == "Bağış"
-                              ?textMod("${user?.donate} PC")
-                            :textMod("?")
+                              ?textMod("${user?.donate} PC", 15, Colors.white)
+                            :textMod("?", 15, Colors.white)
                       ],
                     ),
                   ),
@@ -264,7 +297,8 @@ class _profilePage extends ConsumerState <profilePage> {
       ),
     );
   }
-  Widget profilCustomBtn(String title) {
+  Widget profilCustomBtn(BuildContext context, String title) {
+    var authRiv = ref.read(AuthenticationServiceRiverpod);
     IconData ?myicon ;
     if(title == "Mesaj"){
       myicon = Icons.mail ;
@@ -272,12 +306,17 @@ class _profilePage extends ConsumerState <profilePage> {
       myicon = Icons.add;
     }else if(title == "Takip") {
       myicon = Icons.minimize ;
-    } else {
+    }else if(title == "Çıkış Yap"){
+      myicon = Icons.logout;
+    }
+    else {
       myicon = Icons.more_horiz;
     }
     return InkWell(
       onTap: () {
-        print("viiyyğğhh");
+        if(title == "Çıkış Yap"){
+          authRiv.signOut().then((value) => authRiv.refreshRiv());
+        }
       },
       child: DecoratedBox(decoration: BoxDecoration(
           color: Colors.black,
@@ -371,170 +410,180 @@ class _profilePage extends ConsumerState <profilePage> {
     );
   }
   Widget firstPage(BuildContext context, Size size, Userinfo? user) {
-    return SizedBox(
-      height: user!.post_list!.length / 2 * 20,
-      width: size.width,
-      child: GridView.count(
-          padding: EdgeInsets.symmetric(vertical:  5, horizontal: 25),
-          crossAxisCount: 2,
-          crossAxisSpacing: 15,
-          mainAxisSpacing: 15,
-          childAspectRatio: 0.87,
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          controller: _scrollController,
-          children: List.generate(user!.post_list!.length, (index) {
-            return SizedBox(
-              height: 20,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(width: 1),
-                    boxShadow:  const [
-                      BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 7,
-                          offset: Offset(3, 3)
-                      )
-                    ]
-                ),
-                child: Column(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        "assets/image/dog1.png",
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children:  [
-                          Row(
-                            children: const [
-                              Icon(
-                                Icons.favorite,
-                                color: ColorConstants.pink,
-                                size: 17,
+    return FutureBuilder(
+      future: dbFirebase().getUserPosts(FirebaseAuth.instance.currentUser!.uid),
+      builder: (context, snapshot) {
+        if(snapshot != null){
+          if(snapshot.data!.length == 0){
+            return Center(child: Text("Henüz Bir Gönderi yok."));
+          }else{
+            List<Postinfo> myPost = snapshot.data!;
+            return GridView.count(
+                padding: EdgeInsets.symmetric(vertical:  5, horizontal: 25),
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 19,
+                childAspectRatio: 1,
+                physics: NeverScrollableScrollPhysics(),
+                controller: _scrollController,
+                children: List.generate(myPost.length, (index) {
+                  return FutureBuilder(
+                    future: sharePost().downPostImage(myPost[index]),
+                    builder: (context, snapshot) {
+                      var imageadress = snapshot.data;
+                      if(snapshot != null){
+                        return DecoratedBox(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(width: 1),
+                              boxShadow:  const [
+                                BoxShadow(
+                                    color: Colors.black38,
+                                    blurRadius: 9,
+                                    offset: Offset(3, 3)
+                                )
+                              ]
+                          ),
+                          child: Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.network( //post images
+                                  "$imageadress",
+                                ),
                               ),
-                              SizedBox(width: 5),
-                              Icon(
-                                Icons.comment_rounded,
-                                color: ColorConstants.pink,
-                                size: 17,
-                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children:  [
+                                    Row(
+                                      children: const [
+                                        Icon(
+                                          Icons.favorite,
+                                          color: ColorConstants.pink,
+                                          size: 17,
+                                        ),
+                                        SizedBox(width: 5),
+                                        Icon(
+                                          Icons.comment_rounded,
+                                          color: ColorConstants.pink,
+                                          size: 17,
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      "${myPost[index].like_list!.length} Beğeni",
+                                      style: const TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w400
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
                             ],
                           ),
-                          const Text(
-                            "333 Beğeni",
-                            style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w400
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
+                        );
+                      }else{
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  );
+                },
+              )
             );
-          },
-          )
-      ),
+
+          }
+        }else{
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
   Widget secondPage(BuildContext context, Size size) {
-    return SizedBox(
-      height: 200,
-      width: size.width,
-      child: ListView.builder(
-        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: 2,
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              Container(
-                height: size.height * 0.2,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: ColorConstants.lightpink,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
-                      child: Image.asset(
-                          "assets/image/dog1.png"
-                      ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.2,
-                      width: size.width * 0.47,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height : size.height * 0.16,
-                            width: size.width * 0.47,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: const [
-                                    Text("Ad"),
-                                    Text("Soyad"),
-                                    Text("il/ilçe"),
-                                    Text("Yayın Tarihi"),
-                                  ],
-                                ),
-
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: const [
-                                    Text("Gas"),
-                                    Text("Jhefert"),
-                                    Text(
-                                      "İstanbul/Beşiktaş",
-                                      style: TextStyle(
-                                          fontSize: 12
-                                      ),
-                                    ),
-                                    Text("08/06/2023"),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
-                              Icon(
-                                Icons.remove_red_eye,
-                                size: 17,
-                              ),
-                              Text("48 Görünülenme")
-                            ],
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: 2,
+      itemBuilder: (context, index) {
+        return Column(
+          children: [
+            Container(
+              height: size.height * 0.17,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: ColorConstants.lightpink,
               ),
-              const SizedBox(
-                height: 15,
-              )
-            ],
-          );
-        },
-      ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
+                    child: Image.asset(
+                        "assets/image/dog1.png"
+                    ),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.17,
+                    width: size.width * 0.5,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height : size.height * 0.13,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: const [
+                                  Text("Ad"),
+                                  Text("il/ilçe"),
+                                  Text("Yayın Tarihi"),
+                                ],
+                              ),
+
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: const [
+                                  Text("Gas"),
+                                  Text(
+                                    "İstanbul/Beşiktaş",
+                                    style: TextStyle(
+                                        fontSize: 12
+                                    ),
+                                  ),
+                                  Text("08/06/2023"),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: const [
+                            Icon(
+                              Icons.remove_red_eye,
+                              size: 17,
+                            ),
+                            Text("48 Görünülenme")
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            )
+          ],
+        );
+      },
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:streetanimals/models/order_info.dart';
+import 'package:streetanimals/models/product_info.dart';
 import 'package:streetanimals/models/user_info.dart';
 import '../models/post_info.dart';
 
@@ -11,11 +13,37 @@ class dbFirebase {
     final json = user.toJson();
     await docUser.set(json);
   }
+  void createProduct(Productinfo product) async {
+    final docProduct = firestore.collection("products").doc();
+    final json = product.toJson();
+    await docProduct.set(json);
+    dbFirebase().update("product", docProduct.id, {"id":docProduct.id});
+  }
+  void createOrder(Orderinfo order) async {
+    final docProduct = firestore.collection("orders").doc();
+    final json = order.toJson();
+    await docProduct.set(json);
+    dbFirebase().update("orders", docProduct.id, {"id":docProduct.id});
+  }
+
+  Future<List<Productinfo>> readProducts() async {
+    Productinfo ? product ;
+    List<Productinfo> products = [] ;
+    var snapshot = await firestore.collection("products").get();
+    if (snapshot != null && snapshot.docs.length > 0) {
+      snapshot.docs.forEach((document) {
+        product = Productinfo.fromJson(document.data());
+        products.add(product!);
+      });
+    }
+    return products ;
+  }
+
 
   Future<List<Userinfo>> readUsers() async {
     Userinfo ? user ;
     List<Userinfo> users = [] ;
-    var snapshot = await FirebaseFirestore.instance.collection("users").get();
+    var snapshot = await firestore.collection("users").get();
     if (snapshot != null && snapshot.docs.length > 0) {
       snapshot.docs.forEach((document) {
         user = Userinfo.fromJson(document.data());
@@ -25,10 +53,60 @@ class dbFirebase {
     return users ;
   }
 
+  Future<List<Postinfo>> readPosts() async {
+    Postinfo ? post ;
+    List<Postinfo> posts = [] ;
+    var snapshot = await firestore.collection("posts").get();
+    if (snapshot != null && snapshot.docs.length > 0) {
+      snapshot.docs.forEach((document) {
+        post = Postinfo.fromJson(document.data());
+        posts.add(post!);
+      });
+    }
+    return posts ;
+  }
+
+  Future<List<Postinfo>> getUserPosts(String userID) async {
+    Postinfo ? post ;
+    List<Postinfo> posts = [];
+    Userinfo? user = await getUser(userID);
+    List? postIDList  = user!.post_list;
+    var snapshot = await firestore.collection("posts").get();
+    postIDList?.forEach((postID) {
+      if (snapshot != null && snapshot.docs.length > 0) {
+        snapshot.docs.forEach((document) {
+          if(postID == document.id){
+            post = Postinfo.fromJson(document.data());
+            posts.add(post!);
+          }
+        });
+      }
+    });
+    return posts ;
+  }
+
+  Future<List<Productinfo>> getUserBusketList(String userID) async {
+    Productinfo ? product ;
+    List<Productinfo> products = [];
+    Userinfo? user = await getUser(userID);
+    List? productIDList  = user!.busket_list;
+    var snapshot = await firestore.collection("products").get();
+    productIDList?.forEach((productID) {
+      if (snapshot != null && snapshot.docs.length > 0) {
+        snapshot.docs.forEach((document) {
+          if(productID == document.id){
+            product = Productinfo.fromJson(document.data());
+            products.add(product!);
+          }
+        });
+      }
+    });
+    return products ;
+  }
+
   Future<Userinfo?> getUser(String ?uid) async {//girilen uid ye göre kullanıcıyı dönen fonksiyon.
     Userinfo ? userr ;
-    print(uid);
-    var snapshot = await FirebaseFirestore.instance.collection("users").get();
+    var snapshot = await firestore.collection("users").get();
     if (snapshot != null && snapshot.docs.length > 0) {
       snapshot.docs.forEach((document) {
         var user = Userinfo.fromJson(document.data());
@@ -40,7 +118,7 @@ class dbFirebase {
     return userr ;
   }
 
-  void update(String collection,String id,Map<String, Object> changes) {
+  void update(String collection,String id,Map<String, Object> changes) async {
     firestore
         .collection(collection)
         .doc(id)
@@ -63,6 +141,7 @@ class dbFirebase {
       users.forEach((user) {
         if(user.email == email){
           print(user.name);
+          id = user.id ;
         }
       });
     },
@@ -96,13 +175,19 @@ class dbFirebase {
 
  */
 
+  void addBusket(Productinfo product)  {
+     dbFirebase().getUser(FirebaseAuth.instance.currentUser!.uid).then((value) {
+      List? a = value!.busket_list;
+      a!.add(product.id);
+      dbFirebase().update("users", FirebaseAuth.instance.currentUser!.uid,{"busket_list" : a});
+    },);
+  }
   void createPost(Postinfo post) async {
     final docUser = firestore.collection("posts").doc();
     final json = post.toJson();
     await docUser.set(json);
     update("posts", docUser.id, {"id":docUser.id});
     var user = dbFirebase().getUser(FirebaseAuth.instance.currentUser!.uid).then((value) {
-      print(value?.email);
       List? a = value!.post_list;
       a!.add(docUser.id);
       dbFirebase().update("users", FirebaseAuth.instance.currentUser!.uid, {"post_list" : a});

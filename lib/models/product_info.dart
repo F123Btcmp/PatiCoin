@@ -4,6 +4,7 @@ class Productinfo {
   String ?price;
   String ?image;
   String ?explanation;
+  String ?category;
 
   Productinfo({
     this.id,
@@ -11,6 +12,7 @@ class Productinfo {
     required this.price,
     required this.image,
     required this.explanation,
+    required this.category,
   });
 
   Map<String, dynamic> toJson() => {
@@ -18,7 +20,8 @@ class Productinfo {
     "name" : name,
     "price" : price,
     "image" : image,
-    "explanation" : explanation
+    "explanation" : explanation,
+    "category" : category,
   };
 
   static Productinfo fromJson(Map<String, dynamic> json) => Productinfo(
@@ -27,5 +30,6 @@ class Productinfo {
     price : json["price"],
     image : json["image"],
     explanation : json["explanation"],
+    category : json["category"]
   );
 }

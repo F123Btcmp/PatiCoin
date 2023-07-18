@@ -1,13 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:streetanimals/pages/cam_page.dart';
-import 'package:streetanimals/pages/login_and_register/login_view.dart';
-import 'package:streetanimals/pages/login_and_register/register_view.dart';
-import 'package:streetanimals/pages/profile_page.dart';
+import 'package:streetanimals/UI/banner.dart';
+import 'package:streetanimals/UI/post_ui.dart';
+import 'package:streetanimals/UI/welcome.dart';
+import 'package:streetanimals/constans/material_color.dart';
+import 'package:streetanimals/models/post_info.dart';
 import 'package:streetanimals/riverpod_management.dart';
-
-import '../classes/nav_bar.dart';
+import 'package:streetanimals/utils/db_firebase.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -20,50 +19,61 @@ class _MyHomePageState extends ConsumerState <MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var navbarRiv = ref.read(navbarRiverpod);
     var authRiv = ref.read(AuthenticationServiceRiverpod);
-    var user = FirebaseAuth.instance.currentUser;
-    var name = user?.email;
-    return Scaffold(
-      body : Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            authRiv.isActive!
-                ? name ?? "girişyok"
-                : "giriş yok"
-          ),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => profilePage()));
-              },
-              child: Text("Profile Page")
-          ),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginView()));
-              },
-              child: Text("Login page")
-          ),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterView()));
-              },
-              child: Text("Register Page")
-          ),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => camPage()));
-              },
-              child: Text("Cam Page")
-          ),
-          ElevatedButton(
-              onPressed: () {
-                authRiv.signOut().then((value) => authRiv.refreshRiv());
-              },
-              child: const Text("Çıkış Yap")
-          ),
-        ],
+    var size = MediaQuery.of(context).size;
+    List<Widget> ?widgets ;
+    return SingleChildScrollView(
+      physics: NeverScrollableScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.20),
+        child: FutureBuilder(
+          future: dbFirebase().readPosts(),
+          builder: (context, snapshot) {
+            if(snapshot.hasData){
+              List<Postinfo> posts_list = snapshot.data!;
+              if(posts_list.length != 0){
+                return SizedBox(
+                  height: size.height,
+                  child: ListView.builder(
+                    itemCount: posts_list.length!,
+                    itemBuilder: (context, index) {
+                      if(index == 0 ){
+                        return Column(
+                          children: [
+                            Welcoming(),
+                            banner(),
+                            postUi(posts_list[index])
+                          ],
+                        );
+                      }else{
+                        print(posts_list.length);//bu hep çalışıyor.
+                        print("listeleme yapıyor");
+                        return postUi(posts_list[index]);
+                      }
+                    },
+                  ),
+                );
+              }else{
+                return SizedBox(
+                  height: size.height * .4,
+                  child: Column(
+                    children: const [
+                      Welcoming(),
+                      banner(),
+                      Center(child: Text("Henüz Hiç Gönderi Yok")),
+                    ],
+                  ),
+                );
+              }
+            }else{
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: ColorConstants.pink2,
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }

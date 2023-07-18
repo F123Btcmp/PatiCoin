@@ -1,9 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:streetanimals/classes/nav_bar2.dart';
 import 'package:streetanimals/pages/login_and_register/login_view.dart';
 import 'package:streetanimals/riverpod_management.dart';
-import '../classes/nav_bar.dart';
+import 'package:streetanimals/utils/db_firebase.dart';
 
 class base_PatiCoin extends ConsumerStatefulWidget {
   const base_PatiCoin({Key? key}) : super(key: key);
@@ -14,7 +15,9 @@ class base_PatiCoin extends ConsumerStatefulWidget {
 
 class _base_PatiCoinState extends ConsumerState<base_PatiCoin> {
   void loadData()  async {
-
+    await dbFirebase().getUser(FirebaseAuth.instance.currentUser?.uid).then((value) {
+      ref.read(AuthenticationServiceRiverpod).loadUser(value!);
+    });
   }
 
   @override
@@ -28,10 +31,15 @@ class _base_PatiCoinState extends ConsumerState<base_PatiCoin> {
     var navbarRiv = ref.watch(navbarRiverpod);
     var authRiv = ref.read(AuthenticationServiceRiverpod);
     authRiv.setisActive(authRiv.isUserLoggedIn());
-    ref.watch(AuthenticationServiceRiverpod).refresh; // gailba silebiliriz bakacağım.
+    dbFirebase().getUser(FirebaseAuth.instance.currentUser?.uid).then((value) {
+      ref.read(AuthenticationServiceRiverpod).loadUser(value!);
+    });
+    ref.watch(AuthenticationServiceRiverpod).refresh; // coşkuyu bu veriyor// .
     if(authRiv.isUserLoggedIn()){
       return SafeArea(
         child: Scaffold(
+          extendBody: true,
+          resizeToAvoidBottomInset: false,
           bottomNavigationBar: navBar2(),
           body : navbarRiv.body(),
         ),

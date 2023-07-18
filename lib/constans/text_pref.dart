@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 
 class textMod extends StatelessWidget {
   final String title;
+  final double size;
+  final Color color;
 
-  const textMod(this.title, {Key? key,}) : super(key: key);
+  const textMod(this.title,this.size, this.color, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Text(
       title,
       style: TextStyle(
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
+        color: color,
+        fontSize: size,
+        fontFamily: FontConstants.montserratBold,
       ),
     );
   }

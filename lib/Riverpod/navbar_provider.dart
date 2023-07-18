@@ -4,7 +4,9 @@ import 'package:streetanimals/pages/cam_page.dart';
 import 'package:streetanimals/pages/home_page.dart';
 import 'package:streetanimals/pages/login_and_register/login_view.dart';
 import 'package:streetanimals/pages/login_and_register/register_view.dart';
+import 'package:streetanimals/pages/more_page.dart';
 import 'package:streetanimals/pages/profile_page.dart';
+import 'package:streetanimals/pages/store_page.dart';
 
 class navbarProvider extends ChangeNotifier {
   int currentindex = 0;
@@ -24,8 +26,12 @@ class navbarProvider extends ChangeNotifier {
     switch (currentindex) {
       case 0:
         return const MyHomePage();
+      case 1:
+        return const morePage();
       case 2:
         return const camPage();
+      case 3:
+        return const storePage();
       case 4:
         return const profilePage();
       case 5 :

@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:streetanimals/constans/material_color.dart';
 import 'package:streetanimals/riverpod_management.dart';
+import 'package:streetanimals/utils/db_firebase.dart';
 import 'package:streetanimals/utils/share_post.dart';
 
 class camPage extends ConsumerStatefulWidget {
@@ -18,19 +20,34 @@ class _camPage extends ConsumerState<camPage> {
   File ?imageFile2;
 
 
+
   void _getFromCamera() async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.camera,
       maxHeight: 1080,
       maxWidth: 1080,
     );
-    setState(() {
-      if (imageFile1 == null){
-        imageFile1 = File(pickedFile!.path);
-      }else{
-        imageFile2 = File(pickedFile!.path);
+
+
+    if (pickedFile != null) {
+      img.Image? originalImage = img.decodeImage(await pickedFile.readAsBytes());
+
+      if (originalImage != null) {
+        img.Image resized = img.copyCrop(originalImage, x: 100, y: 200, width: 800, height: 600);
+        File resizedFile = File(pickedFile.path)..writeAsBytesSync(img.encodeJpg(resized));
+        setState(() {
+          if (imageFile1 == null){
+            imageFile1 = File(resizedFile!.path);
+          }else{
+            imageFile2 = File(resizedFile!.path);
+          }
+        });
+        // Do something with the resizedFile (e.g., display or upload)
       }
-    });
+    }
+
+
+
   }
   TextEditingController _textcontroller = TextEditingController();
   PageController _pagecontroller = PageController();
@@ -45,7 +62,7 @@ class _camPage extends ConsumerState<camPage> {
           backgroundColor: ColorConstants.fillColorText,
           body: SingleChildScrollView(
             child: SizedBox(
-              height: size.height * 0.92,
+              height: size.height * 0.85,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
                 child: Column(
@@ -71,34 +88,19 @@ class _camPage extends ConsumerState<camPage> {
                               SizedBox(
                                   height:size.width * 0.15,
                                   width: size.width * 0.15,
-                                  child: Image.network("https://cdn-icons-png.flaticon.com/512/3135/3135715.png")//Hero
-                              ),
-                              Positioned(
-                                bottom: 0.0,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Container(
-                                    height: size.width * 0.04,
-                                    width: size.width * 0.11,
-                                    color: Colors.black,
-                                    child: const Center(
-                                      child: Text(
-                                        "Admin",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 11
-                                        ),
-                                      ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(30),
+                                    child: Image.network(
+                                        "${authRiv.user!.picture}",
                                     ),
-                                  ),
-                                ),
-                              )
+                                  )//Hero
+                              ),
                             ]
                         ),
                         SizedBox(width: size.width * 0.07),
-                        const Text(
-                          "Name Surname",
-                          style: TextStyle(
+                        Text(
+                          "${authRiv.user!.name} ${authRiv.user!.surname}",
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                             fontSize: 18,
@@ -114,7 +116,7 @@ class _camPage extends ConsumerState<camPage> {
                         }
                       },
                       child: SizedBox( ///foto kutusu
-                        height: size.height * .4,
+                        height: size.height * .32,
                         width:  double.infinity,
                         child: Container(
                           decoration: BoxDecoration(
@@ -158,9 +160,6 @@ class _camPage extends ConsumerState<camPage> {
                                   top: 5,
                                   child: IconButton(
                                       onPressed: () {
-                                        print("aaa");
-                                        print(imageFile2);
-                                        print(_pagecontroller.page);
                                         if(_pagecontroller.page == 0){
                                           setState(() {
                                             imageFile1!.deleteSync();
@@ -279,7 +278,13 @@ class _camPage extends ConsumerState<camPage> {
                         }if(imageFile2 != null){
                           images.add(imageFile2!);
                         }
-                        await sharePost().uploadFileToStorage(images, _textcontroller, authRiv.firebaseAuth).then((value) => navbarRiv.setCurrentindex(0));
+                        await sharePost().uploadFileToStorage(images, _textcontroller, authRiv.firebaseAuth).then((value) {
+                          var newvalue = (double.tryParse(authRiv.user!.coin!)! + 0.3).toString();
+                          dbFirebase().update("users", authRiv.user!.id!, {"coin" : newvalue});
+                          authRiv.refreshRiv();
+                          Navigator.of(context).pop();
+                        });
+
                         images.clear();
                       },
                       child: Container( ///buton
@@ -311,7 +316,7 @@ class _camPage extends ConsumerState<camPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        navbarRiv.setCurrentindex(0);
+                        Navigator.of(context).pop();
                       },
                       child: const Text("Paylaşmadan Devam Etmek istiyorum.")
                     ),
