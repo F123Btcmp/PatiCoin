@@ -112,7 +112,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                       CustomButton(
                         buttonText: 'Giriş Yap',
                         onPressed: () {
-                          authRiv.signInWithEmailAndPassword(_email.text, _password.text).then((value) => authRiv.refreshRiv());
+                          authRiv.signInWithEmailAndPassword(_email.text, _password.text).then((value) => ref.read(refreshRiverpod).changeState());
                         },
                       ),
                       const RegisterText(),

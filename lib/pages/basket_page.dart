@@ -147,7 +147,7 @@ class _basketPageState extends ConsumerState<basketPage> {
                                   }else{
                                     print("Sepeti onayladım");
                                     dbFirebase().update("users", FirebaseAuth.instance.currentUser!.uid, {"busket_list": []});
-                                    ref.read(AuthenticationServiceRiverpod).refreshRiv();
+                                    ref.read(refreshRiverpod).changeState();
                                     NTP.now().then((currenttime) {
                                       dbFirebase().createOrder(
                                           Orderinfo(
