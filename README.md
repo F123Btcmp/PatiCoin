@@ -4,7 +4,7 @@ F-123
 ## Takım Elemanları
 - Zeynep Nazlı Erşen: Product Owner
 - Rümeysa Ordu: Scrum Master  (kod yazmadı)
-- İbrahim Ethem Akbıyık: Team Member/Developer 
+- İbrahim Ethem Akbıyık: Team Member/Developer  
 - Berat Berkay Abakay: Team Member/Developer (kod yazmadı)
 
 ## Ürün İsmi
